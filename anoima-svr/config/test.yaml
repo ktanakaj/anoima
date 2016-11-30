@@ -1,0 +1,32 @@
+---
+  sequelize:
+    database: "breakout_db"
+    username: ""
+    password: ""
+    options:
+      dialect: "sqlite"
+      storage: '/tmp/breakout_test.db'
+  redis:
+    host: "192.0.2.1" #テスト用の存在しないIP
+    port: 6379
+  deltaDNA:
+    collectURL: "http://collectXXXXtstfr.deltadna.invalid/collect/api" # 無効なURL
+    engageURL: "http://engageXXXXtstfr.deltadna.invalid" # 無効なURL
+    environmentKEY: "75076824674673675989759726614677" # Dev
+  log4js:
+    appenders:
+      - type: "console"
+        category: "access" # アクセスログ
+      - type: "console"
+        category: "http" # 通信ログ
+      - type: "console"
+        category: "error" # エラーログ
+      - type: "console"
+        category: "debug" # デバッグログ
+      - type: "console" # コンソール
+    levels:
+      access: "INFO"
+      http: "INFO"
+      error: "INFO"
+      debug: "INFO"
+    replaceConsole: false
