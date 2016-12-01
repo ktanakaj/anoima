@@ -1,14 +1,13 @@
-"use strict";
 /**
  * あの人or情報へのコメントモデルクラスのSequelizeモジュール。
  * @module ./models/shardable/comment
- * @param {Sequelize} sequelize Sequelizeインスタンス。
- * @returns {Object} モデルクラス定義。
+ * @param sequelize Sequelizeインスタンス。
+ * @returns モデルクラス定義。
  */
-const Sequelize = require('sequelize');
-const objectUtils = require('../libs/object-utils');
+import * as Sequelize from 'sequelize';
+import objectUtils from '../../libs/object-utils';
 
-module.exports = function(sequelize) {
+export default function (sequelize) {
 	/**
 	 * あの人or情報へのコメントモデル。
 	 * @class
