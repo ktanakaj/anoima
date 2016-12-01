@@ -1,14 +1,13 @@
-"use strict";
 /**
  * トップページコントローラのNode.jsモジュール。
  *
  * あの人は今？Webアプリのトップページを生成する。
  * @module './routes/index.html'
  */
-const express = require('express');
-const url = require('url');
-const config = require('config');
-const langParser = require('accept-language-parser');
+import * as express from 'express';
+import * as url from 'url';
+import * as config from 'config';
+import * as langParser from 'accept-language-parser';
 const router = express.Router();
 
 // TOPページ
@@ -33,4 +32,4 @@ router.get('/', function (req, res) {
 	});
 });
 
-module.exports = router;
+export default router;

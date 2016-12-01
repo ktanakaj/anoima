@@ -23,7 +23,7 @@
         - name: Check timezone
           shell: timedatectl | grep -e {{ timezone }}
           register: timedatectl_timezone
-          always_run: yes
+          check_mode: no
           changed_when: false
           failed_when: false
         - name: Set timezone
@@ -33,7 +33,7 @@
         - name: Check Node.js repository version
           shell: yum info nodejs | grep -e "Version\s*:\s*[6-9].*$"
           register: nodejs_repository_version
-          always_run: yes
+          check_mode: no
           changed_when: false
           failed_when: false
         - name: Register Node.js repository
@@ -54,22 +54,18 @@
         - name: Install the latest version of Git
           yum: name=git state=latest
       - block:
-        - name: Install "jsdoc" node.js package globally
-          npm: name=jsdoc global=yes
-        - name: Install "eslint" node.js package globally
-          npm: name=eslint global=yes
         - name: Install "mocha" node.js package globally
           npm: name=mocha global=yes
         - name: Install "pm2" node.js package globally
           npm: name=pm2 global=yes
-        - name: Install "babel" node.js package globally
-          npm: name=babel global=yes
-        - name: Install "browserify" node.js package globally
-          npm: name=browserify global=yes
-        - name: Install "watchify" node.js package globally
-          npm: name=watchify global=yes
-        - name: Install "node-pre-gyp" node.js package globally
-          npm: name=node-pre-gyp global=yes
+        - name: Install "webpack" node.js package globally
+          npm: name=webpack global=yes
+        - name: Install "typescript" node.js package globally
+          npm: name=typescript global=yes
+        - name: Install "typedoc" node.js package globally
+          npm: name=typedoc global=yes
+        - name: Install "tslint" node.js package globally
+          npm: name=tslint global=yes
       - block:
         - name: Action to enable service mariadb
           service: name=mariadb state=started enabled=yes
@@ -103,7 +99,7 @@
         - name: Check "pm2" service registration
           shell: systemctl status pm2.service | grep -e "enabled"
           register: pm2_service_loaded
-          always_run: yes
+          check_mode: no
           changed_when: false
           failed_when: false
         - name: Register "pm2" to service by vagrant user
