@@ -18,7 +18,7 @@ class HttpError extends Error {
 	 * @param message 例外エラーメッセージ。未指定時はステータスコードに応じた値。
 	 * @param contentType コンテンツタイプ。未指定時は"text"。
 	 */
-	constructor(status: number, message: string, contentType: string = "text") {
+	constructor(status?: number, message?: string, contentType: string = "text") {
 		super(message || HttpError.makeDefaultMessage(status));
 		this.name = "HttpError";
 		this.status = status || 500;

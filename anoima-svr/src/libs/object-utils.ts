@@ -43,7 +43,7 @@ function set(obj, key, value) {
  * @param {Object} source コピー元のオブジェクト。
  * @param {Array} includes 指定されたプロパティのみをコピーする。
  */
-function copy(target, source, includes) {
+function copy(target, source, includes?) {
 	if (includes === undefined) {
 		Object.assign(target, source);
 		return;
@@ -67,7 +67,7 @@ function copy(target, source, includes) {
  * @param {string} valueKey objs2の特定のプロパティのみを登録する場合そのプロパティ名。get()の形式が使用可。
  * @returns {Promise} マージ結果。
  */
-function mergeArray(objs1, objs2, idKey1, idKey2, objKey, valueKey) {
+function mergeArray(objs1, objs2, idKey1, idKey2, objKey, valueKey?) {
 	// 結合用にハッシュマップ作成
 	const map = {};
 	for (let obj1 of objs1) {

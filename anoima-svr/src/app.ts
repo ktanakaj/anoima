@@ -7,20 +7,21 @@ import * as config from 'config';
 import * as log4js from 'log4js';
 import * as cookieParser from 'cookie-parser';
 import * as bodyParser from 'body-parser';
+import 'source-map-support/register';
 import fileUtils from './libs/file-utils';
 
 const app = express();
 
 // 各種ライブラリ登録
-//log4js.configure(config.log4js);
-//app.use(log4js.connectLogger(log4js.getLogger('access'), {
-//	level: log4js.levels.INFO,
-//	nolog: config.noaccesslog,
-//}));
+log4js.configure(config['log4js']);
+app.use(log4js.connectLogger(log4js.getLogger('access'), {
+	level: log4js.levels.INFO,
+	nolog: config['noaccesslog'],
+}));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.set('views', __dirname + '/views');
+app.set('views', __dirname + '/../views');
 app.set('view engine', 'ejs');
 
 // リバースプロキシのX-Forwarded-Protoを信じる
@@ -44,7 +45,7 @@ const baseDir = path.join(__dirname, "routes");
 let routes = [];
 fileUtils.directoryWalkRecursiveSync(
 		baseDir,
-		function(realpath) {
+		function (realpath) {
 			if (/\.js$/.test(realpath)) {
 				routes.push(realpath);
 				app.use(path.join("/", realpath.replace(baseDir, "").replace(/\.js$/, "")), require(realpath));
@@ -52,23 +53,23 @@ fileUtils.directoryWalkRecursiveSync(
 		});
 
 // API検証用のswagger設定
-//import * as swaggerJSDoc from 'swagger-jsdoc';
-//if (app.get('env') === 'development') {
-//	const swaggerSpec = swaggerJSDoc({
-//		swaggerDefinition: config.swagger,
-//		apis: routes,
-//	});
-//
-//	app.get('/api-docs.json', (req, res) => {
-//		res.setHeader('Content-Type', 'application/json');
-//		res.send(swaggerSpec);
-//	});
-//}
+import swaggerJSDoc = require('swagger-jsdoc');
+if (app.get('env') === 'development') {
+	const swaggerSpec = swaggerJSDoc({
+		swaggerDefinition: config['swagger'],
+		apis: routes,
+	});
+
+	app.get('/api-docs.json', (req, res) => {
+		res.setHeader('Content-Type', 'application/json');
+		res.send(swaggerSpec);
+	});
+}
 
 // エラーハンドラー登録
-import * as errorHandlers from './libs/error-handlers';
+import errorHandlers from './libs/error-handlers';
 for (let handler in errorHandlers) {
 	app.use(errorHandlers[handler]);
 }
 
-export default app;
+module.exports = app;
