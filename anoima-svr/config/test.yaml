@@ -1,18 +1,25 @@
 ---
   sequelize:
-    database: "breakout_db"
-    username: ""
-    password: ""
-    options:
-      dialect: "sqlite"
-      storage: '/tmp/breakout_test.db'
-  redis:
-    host: "192.0.2.1" #テスト用の存在しないIP
-    port: 6379
-  deltaDNA:
-    collectURL: "http://collectXXXXtstfr.deltadna.invalid/collect/api" # 無効なURL
-    engageURL: "http://engageXXXXtstfr.deltadna.invalid" # 無効なURL
-    environmentKEY: "75076824674673675989759726614677" # Dev
+    global:
+      database: "anoima_global"
+      username: ""
+      password: ""
+      options:
+        dialect: "sqlite"
+        storage: '/tmp/anoima_global_test.db'
+    shardable:
+      - database: "anoima_shardable1"
+        username: ""
+        password: ""
+        options:
+          dialect: "sqlite"
+          storage: '/tmp/anoima_shardable1_test.db'
+      - database: "anoima_shardable2"
+        username: ""
+        password: ""
+        options:
+          dialect: "sqlite"
+          storage: '/tmp/anoima_shardable2_test.db'
   log4js:
     appenders:
       - type: "console"

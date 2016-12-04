@@ -25,7 +25,13 @@ export default function (sequelize) {
 			type: Sequelize.STRING,
 			allowNull: false,
 			unique: true,
-			comment: "アクセストークン",
+			comment: "あの人キー",
+		},
+		no: {
+			type: Sequelize.INTEGER(2),
+			allowNull: false,
+			defaultValue: 0,
+			comment: "DB番号",
 		},
 	}, {
 		// クラスオプション

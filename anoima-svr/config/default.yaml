@@ -2,19 +2,74 @@
   appKey: "anoima-svr"
   appName:
     ja: "あの人は今？"
-  version: 0.0.1
+  version: 0.0.2
   webappbase: "/"
   sequelize:
-    database: "anoima_db"
-    username: "anoima_usr"
-    password: "anoima001"
-    options:
-      dialect: "mysql"
-      host: "127.0.0.1"
-      port: 3306
-      pool:
-        maxConnections: 5
-        maxIdleTime: 30
+    global:
+      database: "database"
+      username: null
+      password: null
+      options:
+        dialect: "mysql"
+        replication:
+          write:
+            host: "127.0.0.1"
+            port: 3306
+            database: "anoima_global"
+            username: "anoima_usr"
+            password: "anoima001"
+          read:
+            - host: "127.0.0.1"
+              port: 3306
+              database: "anoima_global"
+              username: "anoima_usr_r"
+              password: "anoima002"
+        pool:
+          maxConnections: 10
+          maxIdleTime: 300
+    shardable:
+      - database: "database"
+        username: null
+        password: null
+        options:
+          dialect: "mysql"
+          replication:
+            write:
+              host: "127.0.0.1"
+              port: 3306
+              database: "anoima_shardable1"
+              username: "anoima_usr"
+              password: "anoima001"
+            read:
+              - host: "127.0.0.1"
+                port: 3306
+                database: "anoima_shardable1"
+                username: "anoima_usr_r"
+                password: "anoima002"
+          pool:
+            maxConnections: 10
+            maxIdleTime: 300
+      - database: "database"
+        username: null
+        password: null
+        options:
+          dialect: "mysql"
+          replication:
+            write:
+              host: "127.0.0.1"
+              port: 3306
+              database: "anoima_shardable2"
+              username: "anoima_usr"
+              password: "anoima001"
+            read:
+              - host: "127.0.0.1"
+                port: 3306
+                database: "anoima_shardable2"
+                username: "anoima_usr_r"
+                password: "anoima002"
+          pool:
+            maxConnections: 10
+            maxIdleTime: 300
   passport:
     secret: "89refgiuaerh8isrggr98ratge"
     expire: 604800 # 一週間
@@ -60,7 +115,7 @@
     swagger: "2.0"
     info:
       title: "あの人は今？"
-      version: 0.0.1
+      version: 0.0.2
       description: "あの人は今？WebアプリのサーバーサイドAPI。"
     basePath: "/api"
     consumes:
@@ -98,126 +153,12 @@
             type: string
             format: date-time
             description: 更新日時
-      StageHeader:
-        type: object
-        required:
-          - id
-          - userId
-          - status
-        properties:
-          id:
-            type: integer
-            format: int32
-            description: ステージヘッダーID
-          userId:
-            type: integer
-            format: int32
-            description: ユーザーID
-          status:
-            type: string
-            description: ステータス (private/public)
-          createdAt:
-            type: string
-            format: date-time
-            description: 登録日時
-          updatedAt:
-            type: string
-            format: date-time
-            description: 更新日時
-          deletedAt:
-            type: string
-            format: date-time
-            description: 削除日時
-          user:
-            $ref: '#/definitions/User'
-      Stage:
-        type: object
-        required:
-          - id
-          - headerId
-          - name
-          - status
-          - map
-          - header
-        properties:
-          id:
-            type: integer
-            format: int32
-            description: ステージID
-          headerId:
-            type: integer
-            format: int32
-            description: ステージヘッダーID
-          name:
-            type: string
-            description: ステージ名
-          status:
-            type: string
-            description: ステータス (latest/updated)
-          map:
-            type: string
-            description: ステージデータ
-          comment:
-            type: string
-            description: ステージコメント
-          createdAt:
-            type: string
-            format: date-time
-            description: 登録日時
-          updatedAt:
-            type: string
-            format: date-time
-            description: 更新日時
-          header:
-            $ref: '#/definitions/StageHeader'
-      Playlog:
-        type: object
-        required:
-          - id
-          - stageId
-          - userId
-          - cleared
-        properties:
-          id:
-            type: integer
-            description: プレイログID
-            format: int64
-          stageId:
-            type: integer
-            description: ステージID
-            format: int32
-          userId:
-            type: integer
-            description: ユーザーID
-            format: int32
-          score:
-            type: integer
-            description: 獲得スコア
-            format: int32
-          cleared:
-            type: boolean
-            description: クリアしたか？
-          createdAt:
-            type: string
-            format: date-time
-            description: 登録日時
-          updatedAt:
-            type: string
-            format: date-time
-            description: 更新日時
     parameters:
-      yearPathParam:
+      personKey:
         in: path
-        name: year
-        description: 年
-        type: integer
-        format: int32
-      monthPathParam:
-        in: path
-        name: month
-        description: 月
-        type: integer
-        format: int32
+        name: key
+        description: あの人キー
+        type: string
     responses:
       BadRequest:
         description: バリデーションNG
@@ -235,14 +176,6 @@
         description: 該当データ無し
         schema:
           type: string
-      RankingKeys:
-        description: 取得成功
-        schema:
-          type: array
-          items:
-            - type: array
-              items:
-                - type: string
     securityDefinitions:
       AuthToken:
         type: apiKey

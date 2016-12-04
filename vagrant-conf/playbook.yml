@@ -11,11 +11,17 @@
     app_web_dir: "/vagrant/anoima-web"
     app_log_dir: /var/log/local/anoima
     app_port: 3000
-    app_db_name: anoima_db
-    app_db_user: anoima_usr
-    app_db_password: anoima001
-    app_db_sample: "/vagrant/anoima-db/sample.sql"
-    app_db_check_url: http://localhost:{{ app_port }}/api/users
+    app_db:
+      - anoima_global
+      - anoima_shardable1
+      - anoima_shardable2
+    app_db_users:
+      - user: anoima_usr
+        password: anoima001
+        privilege: "anoima_global.*:ALL/anoima_shardable1.*:ALL/anoima_shardable2.*:ALL"
+      - user: anoima_usr_r
+        password: anoima002
+        privilege: "anoima_global.*:SELECT/anoima_shardable1.*:SELECT/anoima_shardable2.*:SELECT"
     build_target: build
   tasks:
     - block:
@@ -90,11 +96,13 @@
         - name: Create the web application logging directory
           file: path={{ app_log_dir }} state=directory owner=root group=root mode=1777
         - name: Create the web application database
-          mysql_db: name={{ app_db_name }} encoding=utf8 state=present
+          mysql_db: name={{ item }} encoding=utf8 state=present
+          with_items: "{{ app_db }}"
         - name: Craete the web application db user
-          mysql_user: name={{ app_db_user }} password={{ app_db_password }} host=localhost priv={{ app_db_name }}.*:ALL state=present
-        - name: Craete the web application db user for remote access
-          mysql_user: name={{ app_db_user }} password={{ app_db_password }} host=% priv={{ app_db_name }}.*:ALL state=present
+          mysql_user: name={{ item[1].user }} password={{ item[1].password }} host={{ item[0] }} priv={{ item[1].privilege }} state=present
+          with_nested:
+            - [ 'localhost', '%' ]
+            - "{{ app_db_users }}"
       - block:
         - name: Check "pm2" service registration
           shell: systemctl status pm2.service | grep -e "enabled"
@@ -122,15 +130,9 @@
           npm: path={{ app_svr_dir }} executable="npm --no-bin-links"
         - name: Install node.js package for the client application
           npm: path={{ app_web_dir }} executable="npm --no-bin-links"
+        - name: Build the server application
+          shell: npm run {{ build_target }} chdir={{ app_svr_dir }}
         - name: Build the client application
           shell: npm run {{ build_target }} chdir={{ app_web_dir }}
         - name: Register the web application to pm2
           shell: npm start chdir={{ app_svr_dir }}
-      - block:
-        - wait_for: port={{ app_port }} delay=20
-        - name: Initialize the web application with tables and check a sample db registration
-          uri: url={{ app_db_check_url }}
-          register: app_db_check_result
-        - name: Insert a sample to the web application db
-          shell: mysql --user={{ app_db_user }} --password={{ app_db_password }} {{ app_db_name }} -e 'source {{ app_db_sample }}' -B
-          when: app_db_check_result.json == []
