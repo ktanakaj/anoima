@@ -12,7 +12,7 @@
  */
 import * as express from 'express';
 import validator from '../../libs/validator';
-import models from '../../models';
+import { global } from '../../models';
 const router = express.Router();
 
 /**
@@ -46,7 +46,45 @@ const router = express.Router();
 router.get('/', function (req: express.Request, res: express.Response, next: Function) {
 	// ※ 意味のあるデータにするにはシェーディングされたテーブルまで見る必要がある
 	//    現状だとテスト用
-	models.global['PersonMap'].findAll()
+	global['PersonMap'].findAll()
+		.then(res.json.bind(res))
+		.catch(next);
+});
+
+/**
+ * @swagger
+ * /persons/{key}:
+ *   get:
+ *     tags:
+ *       - persons
+ *     summary: あの人取得
+ *     description: あの人を取得する。
+ *     parameters:
+ *       - $ref: '#/parameters/personKey'
+ *     responses:
+ *       200:
+ *         description: 取得成功
+ *         schema:
+ *           type: array
+ *           items:
+ *             type: object
+ *             properties:
+ *               id:
+ *                 type: integer
+ *                 format: int32
+ *                 description: あの人ID
+ *               key:
+ *                 type: string
+ *                 description: あの人キー
+ *               no:
+ *                 type: integer
+ *                 format: int32
+ *                 description: DB番号
+ */
+router.get('/:key', function (req: express.Request, res: express.Response, next: Function) {
+	global['PersonMap'].findByKey(req.params['key'])
+		.then(validator.validateNotFound)
+		.then((personMap) => personMap.getPerson())
 		.then(res.json.bind(res))
 		.catch(next);
 });

@@ -7,12 +7,23 @@
 import * as Sequelize from 'sequelize';
 import objectUtils from '../../libs/object-utils';
 
-export default function (sequelize) {
+interface AdministratorAttributes {
+	id?: number;
+	mailAddress?: string;
+	password?: string;
+	createdAt?: Date;
+	updatedAt?: Date;
+	deletedAt?: Date;
+}
+
+interface AdministratorInstance extends Sequelize.Instance<AdministratorAttributes> { }
+
+export default function (sequelize: Sequelize.Sequelize) {
 	/**
 	 * 管理者モデル。
 	 * @class
 	 */
-	const Administrator = sequelize.define('administrator', {
+	const Administrator = sequelize.define<AdministratorInstance, AdministratorAttributes>('administrator', {
 		// 列定義
 		id: {
 			type: Sequelize.INTEGER,

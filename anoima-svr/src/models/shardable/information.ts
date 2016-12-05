@@ -7,7 +7,7 @@
 import * as Sequelize from 'sequelize';
 import objectUtils from '../../libs/object-utils';
 
-export default function (sequelize) {
+export default function (sequelize: Sequelize.Sequelize) {
 	/**
 	 * あの人情報モデル。
 	 * @class

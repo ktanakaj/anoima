@@ -7,12 +7,25 @@
 import * as Sequelize from 'sequelize';
 import objectUtils from '../../libs/object-utils';
 
-export default function (sequelize) {
+interface PersonAttributes {
+	id?: number;
+	ownerId?: number;
+	name?: string;
+	privacy?: string;
+	text?: string;
+	createdAt?: Date;
+	updatedAt?: Date;
+	deletedAt?: Date;
+}
+
+interface PersonInstance extends Sequelize.Instance<PersonAttributes> { }
+
+export default function (sequelize: Sequelize.Sequelize) {
 	/**
 	 * あの人モデル。
 	 * @class
 	 */
-	const Person = sequelize.define('person', {
+	const Person = sequelize.define<PersonInstance, PersonAttributes>('person', {
 		// 列定義
 		id: {
 			type: Sequelize.INTEGER,

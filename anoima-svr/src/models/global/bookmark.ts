@@ -1,13 +1,13 @@
 /**
  * ブックマークモデルクラスのSequelizeモジュール。
- * @module ./models/global/user
+ * @module ./models/global/bookmark
  * @param sequelize Sequelizeインスタンス。
  * @returns モデルクラス定義。
  */
 import * as Sequelize from 'sequelize';
 import objectUtils from '../../libs/object-utils';
 
-export default function (sequelize) {
+export default function (sequelize: Sequelize.Sequelize) {
 	/**
 	 * ブックマークモデル。
 	 * @class

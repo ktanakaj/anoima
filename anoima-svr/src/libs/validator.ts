@@ -12,7 +12,7 @@ import { HttpError } from './http-error';
  * @param message エラーの内容。
  * @returns エラーメッセージ。
  */
-function makeMessage(key: string, value: string, name: string, suffix: string): string {
+function makeMessage(key?: string, value?: string, name?: string, suffix?: string): string {
 	let message = null;
 	if (key && value) {
 		message = key + "=" + value + " " + suffix;
@@ -32,7 +32,7 @@ function makeMessage(key: string, value: string, name: string, suffix: string): 
  * @returns paramの値。
  * @throws 検証NG。
  */
-function validateNotFound(param: any, key: string, value: string, name: string): any {
+function validateNotFound(param: any, key?: string, value?: string, name?: string): any {
 	// ifでfalseと判定される値の場合、空として例外を投げる
 	if (!param) {
 		throw new HttpError(404, makeMessage(key, value, name, "is not found"));
@@ -49,7 +49,7 @@ function validateNotFound(param: any, key: string, value: string, name: string):
  * @returns paramの値。
  * @throws 検証NG。
  */
-function validateNumber(param: any, key: string, value: string, name: string): number {
+function validateNumber(param: any, key?: string, value?: string, name?: string): number {
 	// 変換に失敗する値の場合、数値以外として例外を投げる
 	param = Number(param);
 	if (isNaN(param)) {
