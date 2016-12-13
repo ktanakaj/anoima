@@ -6,18 +6,7 @@
  */
 import * as Sequelize from 'sequelize';
 import objectUtils from '../../libs/object-utils';
-
-interface UserAttributes {
-	id?: number;
-	accessToken?: string;
-	accessSecret?: string;
-	note?: string;
-	createdAt?: Date;
-	updatedAt?: Date;
-	deletedAt?: Date;
-}
-
-interface UserInstance extends Sequelize.Instance<UserAttributes> { }
+import { UserInstance, UserAttributes } from '../types';
 
 export default function (sequelize: Sequelize.Sequelize) {
 	/**

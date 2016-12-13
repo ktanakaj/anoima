@@ -13,6 +13,7 @@
 import * as express from 'express';
 import validator from '../../libs/validator';
 import { global } from '../../models';
+const PersonMap = global.PersonMap;
 const router = express.Router();
 
 /**
@@ -43,10 +44,10 @@ const router = express.Router();
  *                 format: int32
  *                 description: DB番号
  */
-router.get('/', function (req: express.Request, res: express.Response, next: Function) {
+router.get('/', function (req: express.Request, res: express.Response, next: express.NextFunction) {
 	// ※ 意味のあるデータにするにはシェーディングされたテーブルまで見る必要がある
 	//    現状だとテスト用
-	global['PersonMap'].findAll()
+	PersonMap.findAll()
 		.then(res.json.bind(res))
 		.catch(next);
 });
@@ -81,8 +82,8 @@ router.get('/', function (req: express.Request, res: express.Response, next: Fun
  *                 format: int32
  *                 description: DB番号
  */
-router.get('/:key', function (req: express.Request, res: express.Response, next: Function) {
-	global['PersonMap'].findByKey(req.params['key'])
+router.get('/:key', function (req: express.Request, res: express.Response, next: express.NextFunction) {
+	PersonMap.findByKey(req.params['key'])
 		.then(validator.validateNotFound)
 		.then((personMap) => personMap.getPerson())
 		.then(res.json.bind(res))

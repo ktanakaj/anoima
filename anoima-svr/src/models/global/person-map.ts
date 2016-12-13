@@ -8,19 +8,7 @@ import * as Sequelize from 'sequelize';
 import * as Promise from "bluebird";
 import objectUtils from '../../libs/object-utils';
 import shardable from '../shardable';
-
-interface PersonMapAttributes {
-	id?: number;
-	ownerId?: number;
-	name?: string;
-	privacy?: string;
-	text?: string;
-	createdAt?: Date;
-	updatedAt?: Date;
-	deletedAt?: Date;
-}
-
-interface PersonMapInstance extends Sequelize.Instance<PersonMapAttributes> { }
+import { PersonMapInstance, PersonMapAttributes, PersonInstance } from '../types';
 
 export default function (sequelize: Sequelize.Sequelize) {
 	/**
@@ -57,8 +45,8 @@ export default function (sequelize: Sequelize.Sequelize) {
 			 * @function getPerson
 			 * @returns あの人インスタンス。
 			 */
-			getPerson: function (): Promise<any> {
-				return shardable[this.no]['Person'].findById(this.id);
+			getPerson: function (): Promise<PersonInstance> {
+				return shardable[this.no].Person.findById(this.id);
 			},
 		},
 		classMethods: {

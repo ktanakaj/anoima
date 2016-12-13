@@ -6,17 +6,7 @@
  */
 import * as Sequelize from 'sequelize';
 import objectUtils from '../../libs/object-utils';
-
-interface AdministratorAttributes {
-	id?: number;
-	mailAddress?: string;
-	password?: string;
-	createdAt?: Date;
-	updatedAt?: Date;
-	deletedAt?: Date;
-}
-
-interface AdministratorInstance extends Sequelize.Instance<AdministratorAttributes> { }
+import { AdministratorInstance, AdministratorAttributes } from '../types';
 
 export default function (sequelize: Sequelize.Sequelize) {
 	/**
