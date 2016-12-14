@@ -13,7 +13,7 @@ const logger = log4js.getLogger('debug');
 const dbconfigs = config['sequelize']['shardable'];
 
 // 水平分割された複数DBへの接続を作成する
-let db: { sequelize: Sequelize.Sequelize, Person?: t.PersonModel, Information?, Comment?, Vote? }[] = [];
+let db: { sequelize: Sequelize.Sequelize, Person?: t.PersonModel, Information?: t.InformationModel, Comment?: t.CommentModel, Vote?: t.VoteModel }[] = [];
 for (let dbconfig of dbconfigs) {
 	let options = dbconfig['options'] || {};
 	options['logging'] = options['logging'] || ((log) => logger.debug(log));

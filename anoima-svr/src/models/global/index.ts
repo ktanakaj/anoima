@@ -22,7 +22,7 @@ const sequelize = new Sequelize(
 	options);
 
 // このディレクトリにある他のモデルクラスをすべて読み込む
-const m: { sequelize: Sequelize.Sequelize, PersonMap?: t.PersonMapModel, User?: t.UserModel, Bookmark?, Administrator?: t.AdministratorModel } = { sequelize };
+const m: { sequelize: Sequelize.Sequelize, PersonMap?: t.PersonMapModel, User?: t.UserModel, Bookmark?: t.BookmarkModel, Administrator?: t.AdministratorModel } = { sequelize };
 fileUtils.directoryWalkSync(
 	__dirname,
 	(realpath) => {
