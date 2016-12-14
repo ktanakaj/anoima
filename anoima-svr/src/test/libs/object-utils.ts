@@ -69,18 +69,4 @@ describe('object-utils', () => {
 			assert.deepStrictEqual(target, {a:"avalue", e:"olde", b:15});
 		});
 	});
-
-	describe('#mergeArray()', () => {
-		it('should merge two object arrays', () => {
-			let objs1 = [{id: 1}, {id: 2}, {id: 3}, {id: 4}];
-			let objs2 = [{uid: 3}, {uid: 5}, {uid: 1}];
-			objectUtils.mergeArray(objs1, objs2, "id", "uid", "sub");
-			assert.deepStrictEqual(objs1, [{id: 1, sub: {uid: 1}}, {id: 2}, {id: 3, sub: {uid: 3}}, {id: 4}]);
-
-			objs1 = [{id: 1}, {id: 2}, {id: 3}, {id: 4}];
-			let objs3 = [{uid: 2, data: {value:30}}, {uid: 3}, {uid: 1, data: {value:10}}];
-			objectUtils.mergeArray(objs1, objs3, "id", "uid", "value", "data.value");
-			assert.deepStrictEqual(objs1, [{id: 1, value:10}, {id: 2, value:30}, {id: 3, value: undefined}, {id: 4}]);
-		});
-	});
 });

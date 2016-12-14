@@ -14,7 +14,7 @@ const logger = log4js.getLogger('error');
  * @param res HTTPレスポンス。
  * @param next 後続のルーティング処理へのcallback。
  */
-function handleNotFound(req, res, next: Function) {
+function handleNotFound(req: express.Request, res: express.Response, next: express.NextFunction) {
 	next(new HttpError(404));
 }
 
@@ -23,7 +23,7 @@ function handleNotFound(req, res, next: Function) {
  * @param err エラー情報。
  * @param res HTTPレスポンス。
  */
-function outputHttpError(err: HttpError, res) {
+function outputHttpError(err: HttpError, res: express.Response) {
 	res.status(err.status);
 	res.type(err.contentType);
 	res.send(err.message);
@@ -34,7 +34,7 @@ function outputHttpError(err: HttpError, res) {
  * @param err Sequelizeの例外。
  * @returns エラーメッセージ文字列。
  */
-function joinSequelizeErrorMessages(err): string {
+function joinSequelizeErrorMessages(err: any): string {
 	if (Array.isArray(err.errors)) {
 		return err.errors.map((e) => e.message || "").join(", ");
 	} else {
@@ -49,7 +49,7 @@ function joinSequelizeErrorMessages(err): string {
  * @param res HTTPレスポンス。
  * @param next 後続のルーティング処理へのcallback。
  */
-function handleSequelizeError(err, req, res, next: Function) {
+function handleSequelizeError(err: any, req: express.Request, res: express.Response, next: express.NextFunction) {
 	if (!res.headersSent) {
 		switch (err.name) {
 			case "SequelizeUniqueConstraintError":
@@ -70,7 +70,7 @@ function handleSequelizeError(err, req, res, next: Function) {
  * @param res HTTPレスポンス。
  * @param next 後続のルーティング処理へのcallback。
  */
-function handleHttpError(err, req, res, next: Function) {
+function handleHttpError(err: any, req: express.Request, res: express.Response, next: express.NextFunction) {
 	if (!res.headersSent && err instanceof HttpError) {
 		outputHttpError(err, res);
 		return;
@@ -85,7 +85,7 @@ function handleHttpError(err, req, res, next: Function) {
  * @param res HTTPレスポンス。
  * @param next 後続のルーティング処理へのcallback。
  */
-function handleErrorForDevelop(err, req, res, next: Function) {
+function handleErrorForDevelop(err: any, req: express.Request, res: express.Response, next: express.NextFunction) {
 	// エラーをそのままレスポンスで出力
 	logger.error(err);
 	if (res.headersSent) {
@@ -101,7 +101,7 @@ function handleErrorForDevelop(err, req, res, next: Function) {
  * @param res HTTPレスポンス。
  * @param next 後続のルーティング処理へのcallback。
  */
-function handleError(err, req, res, next: Function) {
+function handleError(err: any, req: express.Request, res: express.Response, next: express.NextFunction) {
 	// エラーを固定メッセージでレスポンスに出力。ログにはすべて出力
 	logger.error(err);
 	if (res.headersSent) {

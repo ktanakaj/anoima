@@ -32,7 +32,7 @@ function makeMessage(key?: string, value?: string, name?: string, suffix?: strin
  * @returns paramの値。
  * @throws 検証NG。
  */
-function validateNotFound(param: any, key?: string, value?: string, name?: string): any {
+function validateNotFound<T>(param: T, key?: string, value?: string, name?: string): T {
 	// ifでfalseと判定される値の場合、空として例外を投げる
 	if (!param) {
 		throw new HttpError(404, makeMessage(key, value, name, "is not found"));
