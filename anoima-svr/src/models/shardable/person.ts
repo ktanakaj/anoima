@@ -6,6 +6,8 @@
  */
 import * as Sequelize from 'sequelize';
 import objectUtils from '../../libs/object-utils';
+import arrayUtils from '../../libs/array-utils';
+import numberUtils from '../../libs/number-utils';
 import { PersonInstance, PersonAttributes } from '../types';
 
 export default function (sequelize: Sequelize.Sequelize) {
@@ -46,6 +48,36 @@ export default function (sequelize: Sequelize.Sequelize) {
 		// クラスオプション
 		comment: "あの人",
 		paranoid: true,
+		scopes: {
+			public: {
+				where: {
+					privacy: 'public',
+				},
+			},
+		},
+		classMethods: {
+			/**
+			 * 公開設定のあの人IDをランダムで指定件数だけ取得する。
+			 * @function randam
+			 * @returns あの人インスタンス配列。
+			 */
+			randam: async function (limit): Promise<PersonInstance[]> {
+				// ※ 厳密にランダムである必要はないので、
+				//    ランダムなとこから指定件数*2ぐらいでとって、
+				//    その中からランダムなデータを返す。
+				//    （性能問題対策）
+				const dbLimit = limit * 2;
+				const count = await Person.scope('public').count();
+				const max = count - dbLimit;
+				const offset = max > 0 ? numberUtils.randomInt(0, max) : 0;
+				const results = await Person.scope('public').findAll({
+					offset: offset,
+					limit: dbLimit,
+				});
+				arrayUtils.shuffle(results);
+				return results.slice(0, limit);
+			},
+		},
 	});
 	return Person;
 };

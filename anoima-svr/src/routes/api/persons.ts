@@ -11,8 +11,9 @@
  *   description: あの人関連API
  */
 import * as express from 'express';
-import validator from '../../libs/validator';
-import { global } from '../../models';
+import validationUtils from '../../libs/validation-utils';
+import numberUtils from '../../libs/number-utils';
+import { global, shardable, logics } from '../../models';
 const PersonMap = global.PersonMap;
 const router = express.Router();
 
@@ -22,34 +23,34 @@ const router = express.Router();
  *   get:
  *     tags:
  *       - persons
- *     summary: あの人ID一覧
- *     description: あの人IDの一覧を取得する。
+ *     summary: あの人一覧
+ *     description: あの人の一覧を取得する（管理画面用）。
+ *     security:
+ *       - AuthToken: []
  *     responses:
  *       200:
  *         description: 取得成功
  *         schema:
  *           type: array
  *           items:
- *             type: object
- *             properties:
- *               id:
- *                 type: integer
- *                 format: int32
- *                 description: あの人ID
- *               key:
- *                 type: string
- *                 description: あの人キー
- *               no:
- *                 type: integer
- *                 format: int32
- *                 description: DB番号
+ *             $ref: '#/definitions/PersonWithMap'
  */
-router.get('/', function (req: express.Request, res: express.Response, next: express.NextFunction) {
-	// ※ 意味のあるデータにするにはシェーディングされたテーブルまで見る必要がある
-	//    現状だとテスト用
-	PersonMap.findAll()
-		.then(res.json.bind(res))
-		.catch(next);
+router.get('/', async function (req: express.Request, res: express.Response, next: express.NextFunction) {
+	// TODO: n+1問題解消
+	// TODO: ページング
+	// TODO: ビジネスロジックに移動
+	try {
+		const personMaps = await PersonMap.findAll();
+		const people = [];
+		for (let personMap of personMaps) {
+			let person = await personMap.getPerson();
+			// TODO: PersonInstanceのプロパティについて調べる
+			person['map'] = personMap;
+		}
+		res.json(people);
+	} catch (e) {
+		next(e);
+	}
 });
 
 /**
@@ -66,28 +67,87 @@ router.get('/', function (req: express.Request, res: express.Response, next: exp
  *       200:
  *         description: 取得成功
  *         schema:
- *           type: array
- *           items:
- *             type: object
- *             properties:
- *               id:
- *                 type: integer
- *                 format: int32
- *                 description: あの人ID
- *               key:
- *                 type: string
- *                 description: あの人キー
- *               no:
- *                 type: integer
- *                 format: int32
- *                 description: DB番号
+ *           $ref: '#/definitions/Person'
  */
 router.get('/:key', function (req: express.Request, res: express.Response, next: express.NextFunction) {
 	PersonMap.findByKey(req.params['key'])
-		.then(validator.validateNotFound)
+		.then(validationUtils.notFound)
 		.then((personMap) => personMap.getPerson())
 		.then(res.json.bind(res))
 		.catch(next);
+});
+
+/**
+ * @swagger
+ * /persons/random:
+ *   get:
+ *     tags:
+ *       - persons
+ *     summary: あの人ランダムx人取得
+ *     description: あの人をランダムでx人を取得する。
+ *     parameters:
+ *       - in: query
+ *         name: limit
+ *         description: 取得件数
+ *         type: number
+ *     responses:
+ *       200:
+ *         description: 取得成功
+ *         schema:
+ *           type: array
+ *           items:
+ *             $ref: '#/definitions/PersonWithMap'
+ *       400:
+ *         $ref: '#/responses/BadRequest'
+ */
+router.get('/random', function (req: express.Request, res: express.Response, next: express.NextFunction) {
+	logics.randomPeople(validationUtils.range(req.query['limit'], 0, 100))
+		.then(res.json.bind(res))
+		.catch(next);
+});
+
+/**
+ * @swagger
+ * /persons:
+ *   post:
+ *     tags:
+ *       - persons
+ *     summary: あの人新規登録
+ *     description: あの人を新規登録する。
+ *     security:
+ *       - AuthToken: []
+ *     parameters:
+ *       - in: body
+ *         name: body
+ *         description: あの人情報
+ *         required: true
+ *         schema:
+ *           type: object
+ *           required:
+ *             - name
+ *             - privacy
+ *           properties:
+ *             name:
+ *               type: string
+ *               description: あの人の名前
+ *             privacy:
+ *               type: string
+ *               description: 公開設定
+ *             text:
+ *               type: string
+ *               description: あの人の説明
+ *     responses:
+ *       200:
+ *         description: 登録成功
+ *         schema:
+ *           $ref: '#/definitions/PersonWithMap'
+ *       400:
+ *         $ref: '#/responses/BadRequest'
+ *       401:
+ *         $ref: '#/responses/Unauthorized'
+ */
+router.post('/', function (req: express.Request, res: express.Response, next: express.NextFunction) {
+	res.end();
 });
 
 module.exports = router;

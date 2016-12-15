@@ -124,27 +124,86 @@
       - "application/json"
       - "text/plain"
     definitions:
+      Person:
+        type: object
+        description: あの人情報
+        required:
+          - id
+          - ownerId
+          - name
+          - privacy
+        properties:
+          id:
+            type: integer
+            format: int32
+            description: あの人ID
+          ownerId:
+            type: integer
+            format: int32
+            description: 所有者ID
+          name:
+            type: string
+            description: あの人の名前
+          privacy:
+            type: string
+            description: 公開設定
+          text:
+            type: string
+            description: あの人の説明
+          createdAt:
+            type: string
+            format: date-time
+            description: 登録日時
+          updatedAt:
+            type: string
+            format: date-time
+            description: 更新日時
+      PersonMap:
+        type: object
+        description: あの人ID-キーマッピング
+        required:
+          - id
+          - key
+          - no
+        properties:
+          id:
+            type: integer
+            format: int32
+            description: あの人ID
+          key:
+            type: string
+            description: あの人キー
+          no:
+            type: integer
+            format: int32
+            description: DB番号
+          createdAt:
+            type: string
+            format: date-time
+            description: 登録日時
+          updatedAt:
+            type: string
+            format: date-time
+            description: 更新日時
+      PersonWithMap:
+        allOf:
+          - $ref: '#/definitions/Person'
+          - properties:
+              map:
+                $ref: '#/definitions/PersonMap'
       User:
         type: object
         description: ユーザー情報
         required:
           - id
-          - name
-          - status
         properties:
           id:
             type: integer
             format: int32
             description: ユーザーID
-          name:
+          note:
             type: string
-            description: ユーザー名
-          status:
-            type: string
-            description: ステータス (user/admin/disable)
-          comment:
-            type: string
-            description: ユーザーコメント
+            description: ノート
           createdAt:
             type: string
             format: date-time

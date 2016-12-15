@@ -37,7 +37,9 @@ export interface PersonAttributes {
 
 export interface PersonInstance extends Sequelize.Instance<PersonAttributes> { }
 
-export interface PersonModel extends Sequelize.Model<PersonInstance, PersonAttributes> { }
+export interface PersonModel extends Sequelize.Model<PersonInstance, PersonAttributes> {
+	randam(limit: number): Promise<PersonInstance[]>;
+}
 
 export interface InformationAttributes {
 	id?: number;
