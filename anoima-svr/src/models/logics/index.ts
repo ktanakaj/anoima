@@ -7,6 +7,7 @@ import global from '../global';
 import shardable from '../shardable';
 import { randomDb } from '../shardable';
 import * as t from '../types';
+import objectUtils from '../../libs/object-utils';
 const random = new Random();
 const PersonMap = global.PersonMap;
 
@@ -37,13 +38,14 @@ async function randomPeople(limit: number = 20): Promise<t.PersonInstance[]> {
 
 	// キー取得のために、関連するマップを一括取得してマージ
 	if (people.length > 0) {
-		const personMaps = await global.PersonMap.findAll({
+		const personMaps = await PersonMap.findAll({
 			where: {
 				id: {
 					$in: people.map((p) => p.id),
 				},
 			},
-		})
+		});
+		objectUtils.mergeArray(people, personMaps, 'id', 'id', 'map');
 	}
 	return people;
 }

@@ -57,6 +57,24 @@ export default function (sequelize: Sequelize.Sequelize) {
 					},
 				},
 			},
+			instanceMethods: {
+				/**
+				 * あの人情報を取得する。
+				 * @function getPerson
+				 * @returns あの人インスタンス。
+				 */
+				toJSON: function (): Object {
+					// まずデータをコピー（標準の動作）
+					const o = Object.assign({}, this.dataValues);
+					// その他、独自に詰めている値もあれば出す
+					for (let key of ['map']) {
+						if (this[key] !== undefined) {
+							o[key] = this[key];
+						}
+					}
+					return o;
+				},
+			},
 			classMethods: {
 				/**
 				 * 公開設定のあの人IDをランダムで指定件数だけ取得する。
