@@ -28,7 +28,7 @@ app.set('view engine', 'ejs');
 app.set('trust proxy', 'loopback');
 
 // クロスドメインでの参照を許可
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
 	res.header("Access-Control-Allow-Origin", "*");
 	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 	next();
@@ -44,13 +44,13 @@ import * as passport from 'passport';
 const baseDir = path.join(__dirname, "routes");
 let routes = [];
 fileUtils.directoryWalkRecursiveSync(
-		baseDir,
-		function (realpath) {
-			if (/\.js$/.test(realpath)) {
-				routes.push(realpath);
-				app.use(path.join("/", realpath.replace(baseDir, "").replace(/\.js$/, "")), require(realpath));
-			}
-		});
+	baseDir,
+	function (realpath) {
+		if (/\.js$/.test(realpath)) {
+			routes.push(realpath);
+			app.use(path.join("/", realpath.replace(baseDir, "").replace(/\.js$/, "")), require(realpath));
+		}
+	});
 
 // API検証用のswagger設定
 import swaggerJSDoc = require('swagger-jsdoc');

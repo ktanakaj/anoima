@@ -2,10 +2,13 @@
  * DBモデルのビジネスロジックのNode.jsモジュール。
  * @module ./models
  */
-import numberUtils from '../../libs/number-utils';
+import * as Random from 'random-js';
 import global from '../global';
 import shardable from '../shardable';
+import { randomDb } from '../shardable';
 import * as t from '../types';
+const random = new Random();
+const PersonMap = global.PersonMap;
 
 // ビジネスロジックは基本的にモデルに実装する方針だが、
 // シャーディングの関係上、DB横断の処理も発生するため、
@@ -19,7 +22,7 @@ import * as t from '../types';
 async function randomPeople(limit: number = 20): Promise<t.PersonInstance[]> {
 	// ランダムで良いので、シャーディングされたテーブルのうち
 	// どれかから公開のものを指定件数取得する
-	const db = numberUtils.randomInt(0, shardable.length - 1);
+	const db = randomDb();
 	let people = await shardable[db].Person.randam(limit)
 
 	// 運用初期などデータが足りない場合は、全DBを参照
@@ -37,7 +40,7 @@ async function randomPeople(limit: number = 20): Promise<t.PersonInstance[]> {
 		const personMaps = await global.PersonMap.findAll({
 			where: {
 				id: {
-					$in: people.map((p) => p['id']),
+					$in: people.map((p) => p.id),
 				},
 			},
 		})
@@ -45,6 +48,32 @@ async function randomPeople(limit: number = 20): Promise<t.PersonInstance[]> {
 	return people;
 }
 
+/**
+ * あの人情報を新規登録する。
+ * @param person あの人情報。
+ * @returns 生成したインスタンス。
+ */
+async function createPerson(person: t.PersonAttributes): Promise<t.PersonInstance> {
+	// シャーディングしているため、先にマップでIDを発行して、
+	// そのIDでデータ本体を作成する。
+	// （通常のトランザクションは使えないが、ゴミマップが残ってもデータ容量以外害はないので無視する）
+
+	// 適当なDBで仮にモデルを作ってまずバリデーション
+	const data = Object.assign({}, person);
+	shardable[0].Person.build(data).validate({ skip: ['id'] });
+
+	// ランダムなキー/DBでマップを作成
+	const map = await PersonMap.randamCreate();
+
+	// あの人情報本体を登録
+	const Person = shardable[map.no].Person;
+	data.id = map.id;
+	const result = await Person.create(data, { fields: ['id', 'ownerId', 'name', 'privacy', 'text'] });
+	result.map = map;
+	return result;
+}
+
 export default {
 	randomPeople: randomPeople,
+	createPerson: createPerson,
 };

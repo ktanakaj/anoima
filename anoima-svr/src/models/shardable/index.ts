@@ -6,9 +6,11 @@ import * as path from 'path';
 import * as config from 'config';
 import * as Sequelize from 'sequelize';
 import * as log4js from 'log4js';
+import * as Random from 'random-js';
 import fileUtils from '../../libs/file-utils';
 import stringUtils from '../../libs/string-utils';
 import * as t from '../types';
+const random = new Random();
 const logger = log4js.getLogger('debug');
 const dbconfigs = config['sequelize']['shardable'];
 
@@ -53,3 +55,11 @@ for (let dbconfig of dbconfigs) {
 }
 
 export default db;
+
+/**
+ * DBをランダムに抽選する。
+ * @returns 抽選したDB番号。
+ */
+export function randomDb(): number {
+	return random.integer(0, db.length - 1);
+}

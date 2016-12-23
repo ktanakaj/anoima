@@ -12,7 +12,6 @@
  */
 import * as express from 'express';
 import validationUtils from '../../libs/validation-utils';
-import numberUtils from '../../libs/number-utils';
 import { global, shardable, logics } from '../../models';
 const PersonMap = global.PersonMap;
 const router = express.Router();
@@ -44,37 +43,13 @@ router.get('/', async function (req: express.Request, res: express.Response, nex
 		const people = [];
 		for (let personMap of personMaps) {
 			let person = await personMap.getPerson();
-			// TODO: PersonInstanceのプロパティについて調べる
 			person['map'] = personMap;
+			people.push(person);
 		}
 		res.json(people);
 	} catch (e) {
 		next(e);
 	}
-});
-
-/**
- * @swagger
- * /persons/{key}:
- *   get:
- *     tags:
- *       - persons
- *     summary: あの人取得
- *     description: あの人を取得する。
- *     parameters:
- *       - $ref: '#/parameters/personKey'
- *     responses:
- *       200:
- *         description: 取得成功
- *         schema:
- *           $ref: '#/definitions/Person'
- */
-router.get('/:key', function (req: express.Request, res: express.Response, next: express.NextFunction) {
-	PersonMap.findByKey(req.params['key'])
-		.then(validationUtils.notFound)
-		.then((personMap) => personMap.getPerson())
-		.then(res.json.bind(res))
-		.catch(next);
 });
 
 /**
@@ -102,6 +77,30 @@ router.get('/:key', function (req: express.Request, res: express.Response, next:
  */
 router.get('/random', function (req: express.Request, res: express.Response, next: express.NextFunction) {
 	logics.randomPeople(validationUtils.range(req.query['limit'], 0, 100))
+		.then(res.json.bind(res))
+		.catch(next);
+});
+
+/**
+ * @swagger
+ * /persons/{key}:
+ *   get:
+ *     tags:
+ *       - persons
+ *     summary: あの人取得
+ *     description: あの人を取得する。
+ *     parameters:
+ *       - $ref: '#/parameters/personKey'
+ *     responses:
+ *       200:
+ *         description: 取得成功
+ *         schema:
+ *           $ref: '#/definitions/Person'
+ */
+router.get('/:key', function (req: express.Request, res: express.Response, next: express.NextFunction) {
+	PersonMap.findByKey(req.params['key'])
+		.then(validationUtils.notFound)
+		.then((personMap) => personMap.getPerson())
 		.then(res.json.bind(res))
 		.catch(next);
 });
@@ -147,7 +146,9 @@ router.get('/random', function (req: express.Request, res: express.Response, nex
  *         $ref: '#/responses/Unauthorized'
  */
 router.post('/', function (req: express.Request, res: express.Response, next: express.NextFunction) {
-	res.end();
+	logics.createPerson(req.body)
+		.then(res.json.bind(res))
+		.catch(next);
 });
 
 module.exports = router;

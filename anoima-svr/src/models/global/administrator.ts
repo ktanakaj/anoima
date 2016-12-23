@@ -6,38 +6,41 @@
  */
 import * as Sequelize from 'sequelize';
 import objectUtils from '../../libs/object-utils';
-import { AdministratorInstance, AdministratorAttributes } from '../types';
+import { AdministratorModel, AdministratorInstance, AdministratorAttributes } from '../types';
 
 export default function (sequelize: Sequelize.Sequelize) {
 	/**
 	 * 管理者モデル。
 	 * @class
 	 */
-	const Administrator = sequelize.define<AdministratorInstance, AdministratorAttributes>('administrator', {
-		// 列定義
-		id: {
-			type: Sequelize.INTEGER,
-			allowNull: false,
-			primaryKey: true,
-			autoIncrement: true,
-			comment: "管理者ID",
+	const Administrator = <AdministratorModel>sequelize.define<AdministratorInstance, AdministratorAttributes>(
+		'administrator',
+		{
+			// 列定義
+			id: {
+				type: Sequelize.INTEGER,
+				allowNull: false,
+				primaryKey: true,
+				autoIncrement: true,
+				comment: "管理者ID",
+			},
+			mailAddress: {
+				type: Sequelize.STRING,
+				allowNull: false,
+				unique: true,
+				comment: "メールアドレス",
+			},
+			password: {
+				type: Sequelize.STRING,
+				allowNull: false,
+				comment: "パスワード",
+			},
 		},
-		mailAddress: {
-			type: Sequelize.STRING,
-			allowNull: false,
-			unique: true,
-			comment: "メールアドレス",
-		},
-		password: {
-			type: Sequelize.STRING,
-			allowNull: false,
-			comment: "パスワード",
-		},
-	}, {
-		// クラスオプション
-		comment: "管理者",
-		paranoid: true,
-	});
-
+		{
+			// クラスオプション
+			comment: "管理者",
+			paranoid: true,
+		}
+	);
 	return Administrator;
 };

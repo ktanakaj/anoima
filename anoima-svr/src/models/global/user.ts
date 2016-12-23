@@ -6,42 +6,45 @@
  */
 import * as Sequelize from 'sequelize';
 import objectUtils from '../../libs/object-utils';
-import { UserInstance, UserAttributes } from '../types';
+import { UserModel, UserInstance, UserAttributes } from '../types';
 
 export default function (sequelize: Sequelize.Sequelize) {
 	/**
 	 * ユーザーモデル。
 	 * @class
 	 */
-	const User = sequelize.define<UserInstance, UserAttributes>('user', {
-		// 列定義
-		id: {
-			type: Sequelize.INTEGER,
-			allowNull: false,
-			primaryKey: true,
-			autoIncrement: true,
-			comment: "ユーザーID",
+	const User = <UserModel>sequelize.define<UserInstance, UserAttributes>(
+		'user',
+		{
+			// 列定義
+			id: {
+				type: Sequelize.INTEGER,
+				allowNull: false,
+				primaryKey: true,
+				autoIncrement: true,
+				comment: "ユーザーID",
+			},
+			accessToken: {
+				type: Sequelize.STRING(100),
+				allowNull: false,
+				unique: true,
+				comment: "アクセストークン",
+			},
+			accessSecret: {
+				type: Sequelize.STRING(100),
+				allowNull: false,
+				comment: "アクセスシークレット",
+			},
+			note: {
+				type: Sequelize.TEXT,
+				comment: "ノート",
+			},
 		},
-		accessToken: {
-			type: Sequelize.STRING(100),
-			allowNull: false,
-			unique: true,
-			comment: "アクセストークン",
-		},
-		accessSecret: {
-			type: Sequelize.STRING(100),
-			allowNull: false,
-			comment: "アクセスシークレット",
-		},
-		note: {
-			type: Sequelize.TEXT,
-			comment: "ノート",
-		},
-	}, {
-		// クラスオプション
-		comment: "ユーザー",
-		paranoid: true,
-	});
-
+		{
+			// クラスオプション
+			comment: "ユーザー",
+			paranoid: true,
+		}
+	);
 	return User;
 };

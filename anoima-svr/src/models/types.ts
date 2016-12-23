@@ -7,22 +7,21 @@ import * as Sequelize from 'sequelize';
 
 export interface PersonMapAttributes {
 	id?: number;
-	ownerId?: number;
-	name?: string;
-	privacy?: string;
-	text?: string;
+	key?: string;
+	no?: number;
 	createdAt?: Date;
 	updatedAt?: Date;
-	deletedAt?: Date;
 }
 
-export interface PersonMapInstance extends Sequelize.Instance<PersonMapAttributes> {
+export interface PersonMapInstance extends Sequelize.Instance<PersonMapAttributes>, PersonMapAttributes {
 	getPerson(): Promise<PersonInstance>;
- }
+}
 
 export interface PersonMapModel extends Sequelize.Model<PersonMapInstance, PersonMapAttributes> {
 	findByKey(key: string): Promise<PersonMapInstance>;
- }
+	randamCreate(): Promise<PersonMapInstance>;
+	makeKey(): string;
+}
 
 export interface PersonAttributes {
 	id?: number;
@@ -35,7 +34,9 @@ export interface PersonAttributes {
 	deletedAt?: Date;
 }
 
-export interface PersonInstance extends Sequelize.Instance<PersonAttributes> { }
+export interface PersonInstance extends Sequelize.Instance<PersonAttributes>, PersonAttributes {
+	map?: PersonMapInstance;
+}
 
 export interface PersonModel extends Sequelize.Model<PersonInstance, PersonAttributes> {
 	randam(limit: number): Promise<PersonInstance[]>;
@@ -53,7 +54,7 @@ export interface InformationAttributes {
 	deletedAt?: Date;
 }
 
-export interface InformationInstance extends Sequelize.Instance<InformationAttributes> { }
+export interface InformationInstance extends Sequelize.Instance<InformationAttributes>, InformationAttributes { }
 
 export interface InformationModel extends Sequelize.Model<InformationInstance, InformationAttributes> { }
 
@@ -69,7 +70,7 @@ export interface CommentAttributes {
 	deletedAt?: Date;
 }
 
-export interface CommentInstance extends Sequelize.Instance<CommentAttributes> { }
+export interface CommentInstance extends Sequelize.Instance<CommentAttributes>, CommentAttributes { }
 
 export interface CommentModel extends Sequelize.Model<CommentInstance, CommentAttributes> { }
 
@@ -82,7 +83,7 @@ export interface VoteAttributes {
 	updatedAt?: Date;
 }
 
-export interface VoteInstance extends Sequelize.Instance<VoteAttributes> { }
+export interface VoteInstance extends Sequelize.Instance<VoteAttributes>, VoteAttributes { }
 
 export interface VoteModel extends Sequelize.Model<VoteInstance, VoteAttributes> { }
 
@@ -96,7 +97,7 @@ export interface UserAttributes {
 	deletedAt?: Date;
 }
 
-export interface UserInstance extends Sequelize.Instance<UserAttributes> { }
+export interface UserInstance extends Sequelize.Instance<UserAttributes>, UserAttributes { }
 
 export interface UserModel extends Sequelize.Model<UserInstance, UserAttributes> { }
 
@@ -107,7 +108,7 @@ export interface BookmarkAttributes {
 	createdAt?: Date;
 }
 
-export interface BookmarkInstance extends Sequelize.Instance<BookmarkAttributes> { }
+export interface BookmarkInstance extends Sequelize.Instance<BookmarkAttributes>, BookmarkAttributes { }
 
 export interface BookmarkModel extends Sequelize.Model<BookmarkInstance, BookmarkAttributes> { }
 
@@ -120,6 +121,6 @@ export interface AdministratorAttributes {
 	deletedAt?: Date;
 }
 
-export interface AdministratorInstance extends Sequelize.Instance<AdministratorAttributes> { }
+export interface AdministratorInstance extends Sequelize.Instance<AdministratorAttributes>, AdministratorAttributes { }
 
 export interface AdministratorModel extends Sequelize.Model<AdministratorInstance, AdministratorAttributes> { }

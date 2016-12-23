@@ -6,41 +6,46 @@
  */
 import * as Sequelize from 'sequelize';
 import objectUtils from '../../libs/object-utils';
+import { VoteModel, VoteInstance, VoteAttributes } from '../types';
 
 export default function (sequelize: Sequelize.Sequelize) {
 	/**
 	 * あの人情報への投票モデル。
 	 * @class
 	 */
-	const Vote = sequelize.define('vote', {
-		// 列定義
-		id: {
-			type: Sequelize.BIGINT.UNSIGNED,
-			allowNull: false,
-			primaryKey: true,
-			comment: "あの人情報への投票ID",
+	const Vote = <VoteModel>sequelize.define<VoteInstance, VoteAttributes>(
+		'vote',
+		{
+			// 列定義
+			id: {
+				type: Sequelize.BIGINT.UNSIGNED,
+				allowNull: false,
+				primaryKey: true,
+				comment: "あの人情報への投票ID",
+			},
+			informationId: {
+				type: Sequelize.BIGINT.UNSIGNED,
+				allowNull: false,
+				comment: "あの人情報ID",
+			},
+			ownerId: {
+				type: Sequelize.INTEGER,
+				allowNull: false,
+				comment: "投票者ID",
+			},
+			type: {
+				type: Sequelize.ENUM,
+				values: ['good', 'bad'],
+				defaultValue: 'good',
+				allowNull: false,
+				comment: "投票の種類",
+			},
 		},
-		informationId: {
-			type: Sequelize.BIGINT.UNSIGNED,
-			allowNull: false,
-			comment: "あの人情報ID",
-		},
-		ownerId: {
-			type: Sequelize.INTEGER,
-			allowNull: false,
-			comment: "投票者ID",
-		},
-		type: {
-			type: Sequelize.ENUM,
-			values: ['good', 'bad'],
-			defaultValue: 'good',
-			allowNull: false,
-			comment: "投票の種類",
-		},
-	}, {
-		// クラスオプション
-		comment: "あの人情報への投票",
-		paranoid: true,
-	});
+		{
+			// クラスオプション
+			comment: "あの人情報への投票",
+			paranoid: true,
+		}
+	);
 	return Vote;
 };

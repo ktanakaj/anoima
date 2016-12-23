@@ -17,8 +17,8 @@ function dump(value: any) {
  * @param value 出力する値。
  */
 function dumpAll(value: any) {
-	// ※ @types/node 0.0.2 に maxArrayLength が入ってないので一旦コメントアウト
-	console.log(util.inspect(value, { showHidden: true, depth: null/*, maxArrayLength: null*/ }));
+	const option = { showHidden: true, depth: null, maxArrayLength: null };
+	console.log(util.inspect(value, option));
 }
 
 /**
