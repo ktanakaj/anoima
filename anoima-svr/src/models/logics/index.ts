@@ -23,14 +23,14 @@ async function randomPeople(limit: number = 20): Promise<t.PersonInstance[]> {
 	// ランダムで良いので、シャーディングされたテーブルのうち
 	// どれかから公開のものを指定件数取得する
 	const db = randomDb();
-	let people = await shardable[db].Person.randam(limit)
+	let people = await shardable[db].Person.random(limit)
 
 	// 運用初期などデータが足りない場合は、全DBを参照
 	// （データが少なければパフォーマンス問題もないので）
 	for (let i = 0; people.length < limit && i < shardable.length; i++) {
 		if (i !== db) {
-			let add = await shardable[i].Person.randam(limit);
-			people.concat(add);
+			let add = await shardable[i].Person.random(limit);
+			people = people.concat(add);
 		}
 	}
 	people = people.slice(0, limit);
@@ -60,10 +60,13 @@ async function createPerson(person: t.PersonAttributes): Promise<t.PersonInstanc
 
 	// 適当なDBで仮にモデルを作ってまずバリデーション
 	const data = Object.assign({}, person);
-	shardable[0].Person.build(data).validate({ skip: ['id'] });
+	const err = await shardable[0].Person.build(data).validate({ skip: ['id'] });
+	if (err) {
+		throw err;
+	}
 
 	// ランダムなキー/DBでマップを作成
-	const map = await PersonMap.randamCreate();
+	const map = await PersonMap.randomCreate();
 
 	// あの人情報本体を登録
 	const Person = shardable[map.no].Person;

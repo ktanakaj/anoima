@@ -19,7 +19,7 @@ export interface PersonMapInstance extends Sequelize.Instance<PersonMapAttribute
 
 export interface PersonMapModel extends Sequelize.Model<PersonMapInstance, PersonMapAttributes> {
 	findByKey(key: string): Promise<PersonMapInstance>;
-	randamCreate(): Promise<PersonMapInstance>;
+	randomCreate(): Promise<PersonMapInstance>;
 	makeKey(): string;
 }
 
@@ -39,7 +39,7 @@ export interface PersonInstance extends Sequelize.Instance<PersonAttributes>, Pe
 }
 
 export interface PersonModel extends Sequelize.Model<PersonInstance, PersonAttributes> {
-	randam(limit: number): Promise<PersonInstance[]>;
+	random(limit: number): Promise<PersonInstance[]>;
 }
 
 export interface InformationAttributes {

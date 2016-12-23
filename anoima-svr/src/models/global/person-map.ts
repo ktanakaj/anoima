@@ -6,7 +6,6 @@
  */
 import * as Sequelize from 'sequelize';
 import * as Random from 'random-js';
-import objectUtils from '../../libs/object-utils';
 import shardable from '../shardable';
 import { randomDb } from '../shardable';
 import { PersonMapModel, PersonMapInstance, PersonMapAttributes, PersonInstance } from '../types';
@@ -91,7 +90,9 @@ export default function (sequelize: Sequelize.Sequelize) {
 				 * @returns 生成したあの人キー。
 				 */
 				makeKey: function (): string {
-					return random.string("abcdefghijklmnopqrstuvwxyz0123456789", 16);
+					// ※ @types の1.0.8現在、何故か引数が逆になっているのでanyで回避
+					const r: any = random;
+					return r.string(16, "abcdefghijklmnopqrstuvwxyz0123456789");
 				},
 			},
 		});

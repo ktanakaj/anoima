@@ -43,8 +43,10 @@ router.get('/', async function (req: express.Request, res: express.Response, nex
 		const people = [];
 		for (let personMap of personMaps) {
 			let person = await personMap.getPerson();
-			person['map'] = personMap;
-			people.push(person);
+			if (person) {
+				person.map = personMap;
+				people.push(person);
+			}
 		}
 		res.json(people);
 	} catch (e) {
@@ -101,6 +103,7 @@ router.get('/:key', function (req: express.Request, res: express.Response, next:
 	PersonMap.findByKey(req.params['key'])
 		.then(validationUtils.notFound)
 		.then((personMap) => personMap.getPerson())
+		.then(validationUtils.notFound)
 		.then(res.json.bind(res))
 		.catch(next);
 });

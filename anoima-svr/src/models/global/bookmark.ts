@@ -5,7 +5,6 @@
  * @returns モデルクラス定義。
  */
 import * as Sequelize from 'sequelize';
-import objectUtils from '../../libs/object-utils';
 import { BookmarkModel, BookmarkInstance, BookmarkAttributes } from '../types';
 
 export default function (sequelize: Sequelize.Sequelize) {

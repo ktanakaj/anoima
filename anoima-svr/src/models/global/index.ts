@@ -6,8 +6,8 @@ import * as path from 'path';
 import * as config from 'config';
 import * as Sequelize from 'sequelize';
 import * as log4js from 'log4js';
+import * as S from 'string';
 import fileUtils from '../../libs/file-utils';
-import stringUtils from '../../libs/string-utils';
 import * as t from '../types';
 const logger = log4js.getLogger('debug');
 const dbconfig = config['sequelize']['global'];
@@ -28,8 +28,7 @@ fileUtils.directoryWalkSync(
 	(realpath) => {
 		const fname = path.basename(realpath);
 		if (/\.js$/.test(fname) && fname != "index.js") {
-			m[stringUtils.ucfirst(stringUtils.camelize(path.basename(fname, '.js')))]
-				= sequelize.import(realpath);
+			m[S(path.basename(fname, '.js')).camelize().titleCase().s] = sequelize.import(realpath);
 		}
 	});
 

@@ -6,7 +6,6 @@
  */
 import * as Sequelize from 'sequelize';
 import * as Random from 'random-js';
-import objectUtils from '../../libs/object-utils';
 import { PersonModel, PersonInstance, PersonAttributes } from '../types';
 const random = new Random();
 
@@ -64,7 +63,7 @@ export default function (sequelize: Sequelize.Sequelize) {
 				 * @function randam
 				 * @returns あの人インスタンス配列。
 				 */
-				randam: async function (limit): Promise<PersonInstance[]> {
+				random: async function (limit): Promise<PersonInstance[]> {
 					// ※ 厳密にランダムである必要はないので、
 					//    ランダムなとこから指定件数*2ぐらいでとって、
 					//    その中からランダムなデータを返す。
@@ -77,7 +76,9 @@ export default function (sequelize: Sequelize.Sequelize) {
 						offset: offset,
 						limit: dbLimit,
 					});
-					return random.shuffle(Random.Engine, results).slice(0, limit);
+					// ※ @types の1.0.8現在、何故かメソッド定義が無いのでanyで回避
+					const r: any = random;
+					return r.shuffle(results).slice(0, limit);
 				},
 			},
 		}
