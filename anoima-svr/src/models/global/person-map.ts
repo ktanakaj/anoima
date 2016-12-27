@@ -12,10 +12,6 @@ import { PersonMapModel, PersonMapInstance, PersonMapAttributes, PersonInstance 
 const random = new Random();
 
 export default function (sequelize: Sequelize.Sequelize) {
-	/**
-	 * あの人ID-キーマッピングモデル。
-	 * @class
-	 */
 	const PersonMap = <PersonMapModel>sequelize.define<PersonMapInstance, PersonMapAttributes>(
 		'personMap',
 		{
@@ -44,29 +40,14 @@ export default function (sequelize: Sequelize.Sequelize) {
 			// クラスオプション
 			comment: "あの人ID-キーマッピング",
 			instanceMethods: {
-				/**
-				 * あの人情報を取得する。
-				 * @function getPerson
-				 * @returns あの人インスタンス。
-				 */
 				getPerson: async function (): Promise<PersonInstance> {
 					return shardable[this.no].Person.findById(this.id);
 				},
 			},
 			classMethods: {
-				/**
-				 * あの人ID-キーマッピングを取得する。
-				 * @function findByKey
-				 * @returns あの人ID-キーマッピングインスタンス。
-				 */
 				findByKey: async function (key): Promise<PersonMapInstance> {
 					return PersonMap.findOne({ where: { key: key } });
 				},
-				/**
-				 * ランダムなKEY/DBであの人ID-キーマッピングを生成する。
-				 * @function randomCreate
-				 * @returns あの人ID-キーマッピングインスタンス。
-				 */
 				randomCreate: async function (): Promise<PersonMapInstance> {
 					const no = randomDb();
 					while (true) {
@@ -84,11 +65,6 @@ export default function (sequelize: Sequelize.Sequelize) {
 						}
 					}
 				},
-				/**
-				 * ランダムなあの人キーを生成する。
-				 * @function makeKey
-				 * @returns 生成したあの人キー。
-				 */
 				makeKey: function (): string {
 					// ※ @types の1.0.8現在、何故か引数が逆になっているのでanyで回避
 					const r: any = random;

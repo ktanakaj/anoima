@@ -8,10 +8,6 @@ import * as Sequelize from 'sequelize';
 import { UserModel, UserInstance, UserAttributes } from '../types';
 
 export default function (sequelize: Sequelize.Sequelize) {
-	/**
-	 * ユーザーモデル。
-	 * @class
-	 */
 	const User = <UserModel>sequelize.define<UserInstance, UserAttributes>(
 		'user',
 		{

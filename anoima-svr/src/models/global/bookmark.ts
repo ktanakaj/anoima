@@ -8,10 +8,6 @@ import * as Sequelize from 'sequelize';
 import { BookmarkModel, BookmarkInstance, BookmarkAttributes } from '../types';
 
 export default function (sequelize: Sequelize.Sequelize) {
-	/**
-	 * ブックマークモデル。
-	 * @class
-	 */
 	const Bookmark = <BookmarkModel>sequelize.define<BookmarkInstance, BookmarkAttributes>(
 		'bookmark',
 		{

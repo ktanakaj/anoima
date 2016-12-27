@@ -8,10 +8,6 @@ import * as Sequelize from 'sequelize';
 import { CommentModel, CommentInstance, CommentAttributes } from '../types';
 
 export default function (sequelize: Sequelize.Sequelize) {
-	/**
-	 * あの人or情報へのコメントモデル。
-	 * @class
-	 */
 	const Comment = <CommentModel>sequelize.define<CommentInstance, CommentAttributes>(
 		'comment',
 		{

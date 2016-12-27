@@ -8,10 +8,6 @@ import * as Sequelize from 'sequelize';
 import { VoteModel, VoteInstance, VoteAttributes } from '../types';
 
 export default function (sequelize: Sequelize.Sequelize) {
-	/**
-	 * あの人情報への投票モデル。
-	 * @class
-	 */
 	const Vote = <VoteModel>sequelize.define<VoteInstance, VoteAttributes>(
 		'vote',
 		{

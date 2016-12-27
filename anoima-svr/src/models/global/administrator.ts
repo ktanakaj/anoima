@@ -24,10 +24,6 @@ function beforeSave(admin: AdministratorInstance) {
 }
 
 export default function (sequelize: Sequelize.Sequelize) {
-	/**
-	 * 管理者モデル。
-	 * @class
-	 */
 	const Administrator = <AdministratorModel>sequelize.define<AdministratorInstance, AdministratorAttributes>(
 		'administrator',
 		{
@@ -80,13 +76,6 @@ export default function (sequelize: Sequelize.Sequelize) {
 				beforeUpdate: beforeSave,
 			},
 			instanceMethods: {
-				/**
-				 * 渡されたパスワードを現在の値と比較する。
-				 * @function comparePassword
-				 * @param password 変換するパスワード。
-				 * @returns 一致する場合true。
-				 * @throws パスワード未読み込み。
-				 */
 				comparePassword: function (password: string): boolean {
 					if (this.password === null) {
 						throw new Error("this.password is unloaded");
@@ -94,11 +83,6 @@ export default function (sequelize: Sequelize.Sequelize) {
 					// salt;ハッシュ値 のデータからsaltを取り出し、そのsaltで計算した結果と比較
 					return this.password == Administrator.passwordToHash(password, this.password.split(";")[0]);
 				},
-				/**
-				 * パスワードプロパティをハッシュ化する。
-				 * @function hashPassword
-				 * @throws パスワード未設定。
-				 */
 				hashPassword: function (): void {
 					if (this.password === null) {
 						throw new Error("this.password is unseted");
@@ -107,13 +91,6 @@ export default function (sequelize: Sequelize.Sequelize) {
 				},
 			},
 			classMethods: {
-				/**
-				 * 渡されたパスワードをハッシュ値に変換する。
-				 * @function passwordToHash
-				 * @param password 変換するパスワード。
-				 * @param salt 変換に用いるsalt。未指定時は内部で乱数から生成。
-				 * @returns saltとハッシュ値を結合した文字列。
-				 */
 				passwordToHash: function (password: string, salt?: string): string {
 					if (salt === undefined) {
 						// ※ @types の1.0.8現在、何故か引数が逆になっているのでanyで回避

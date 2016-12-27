@@ -8,10 +8,6 @@ import * as Sequelize from 'sequelize';
 import { InformationModel, InformationInstance, InformationAttributes } from '../types';
 
 export default function (sequelize: Sequelize.Sequelize) {
-	/**
-	 * あの人情報モデル。
-	 * @class
-	 */
 	const Information = <InformationModel>sequelize.define<InformationInstance, InformationAttributes>(
 		'information',
 		{

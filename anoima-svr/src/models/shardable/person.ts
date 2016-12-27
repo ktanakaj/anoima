@@ -10,10 +10,6 @@ import { PersonModel, PersonInstance, PersonAttributes } from '../types';
 const random = new Random();
 
 export default function (sequelize: Sequelize.Sequelize) {
-	/**
-	 * あの人モデル。
-	 * @class
-	 */
 	const Person = <PersonModel>sequelize.define<PersonInstance, PersonAttributes>(
 		'person',
 		{
@@ -76,11 +72,6 @@ export default function (sequelize: Sequelize.Sequelize) {
 				},
 			},
 			classMethods: {
-				/**
-				 * 公開設定のあの人IDをランダムで指定件数だけ取得する。
-				 * @function randam
-				 * @returns あの人インスタンス配列。
-				 */
 				random: async function (limit): Promise<PersonInstance[]> {
 					// ※ 厳密にランダムである必要はないので、
 					//    ランダムなとこから指定件数*2ぐらいでとって、
