@@ -10,7 +10,7 @@ import * as path from 'path';
  * @param root 実行元パス。
  * @param func 実行する関数。
  */
-function directoryWalkRecursiveSync(root: string, func: Function) {
+function directoryWalkRecursiveSync(root: string, func: Function): void {
 	fs.readdirSync(root).forEach((fname) => {
 		const realpath = fs.realpathSync(path.join(root, fname));
 		if (fs.statSync(realpath).isDirectory()) {
@@ -26,7 +26,7 @@ function directoryWalkRecursiveSync(root: string, func: Function) {
  * @param root 実行元パス。
  * @param func 実行する関数。
  */
-function directoryWalkSync(root: string, func: Function) {
+function directoryWalkSync(root: string, func: Function): void {
 	fs.readdirSync(root).forEach((fname) => {
 		const realpath = fs.realpathSync(path.join(root, fname));
 		if (!fs.statSync(realpath).isDirectory()) {

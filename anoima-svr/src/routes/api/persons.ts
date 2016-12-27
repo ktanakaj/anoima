@@ -11,6 +11,7 @@
  *   description: あの人関連API
  */
 import * as express from 'express';
+import passportHelper from '../../libs/passport-helper';
 import validationUtils from '../../libs/validation-utils';
 import { global, shardable, logics } from '../../models';
 const PersonMap = global.PersonMap;
@@ -25,7 +26,7 @@ const router = express.Router();
  *     summary: あの人一覧
  *     description: あの人の一覧を取得する（管理画面用）。
  *     security:
- *       - AuthToken: []
+ *       - AdminSessionId: []
  *     responses:
  *       200:
  *         description: 取得成功
@@ -34,7 +35,7 @@ const router = express.Router();
  *           items:
  *             $ref: '#/definitions/PersonWithMap'
  */
-router.get('/', async function (req: express.Request, res: express.Response, next: express.NextFunction) {
+router.get('/', passportHelper.adminAuthorize(), async function (req: express.Request, res: express.Response, next: express.NextFunction) {
 	// TODO: n+1問題解消
 	// TODO: ページング
 	// TODO: ビジネスロジックに移動

@@ -8,7 +8,7 @@ import * as util from 'util';
  * dumpをコンソール出力する。
  * @param value 出力する値。
  */
-function dump(value: any) {
+function dump(value: any): void {
 	console.log(util.inspect(value));
 }
 
@@ -16,7 +16,7 @@ function dump(value: any) {
  * 全dumpをコンソール出力する。
  * @param value 出力する値。
  */
-function dumpAll(value: any) {
+function dumpAll(value: any): void {
 	const option = { showHidden: true, depth: null, maxArrayLength: null };
 	console.log(util.inspect(value, option));
 }
@@ -25,7 +25,7 @@ function dumpAll(value: any) {
  * オブジェクトのプロパティの一覧を出力する。
  * @param obj 出力するオブジェクト。
  */
-function printProperties(obj: Object) {
+function printProperties(obj: Object): void {
 	let log = "";
 	for (let key in obj) {
 		log += key + "\n";

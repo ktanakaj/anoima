@@ -10,7 +10,7 @@ import * as S from 'string';
 import fileUtils from '../../libs/file-utils';
 import * as t from '../types';
 const logger = log4js.getLogger('debug');
-const dbconfig = config['sequelize']['global'];
+const dbconfig: Object = config['sequelize']['global'];
 
 const options = dbconfig['options'] || {};
 options['logging'] = options['logging'] || ((log) => logger.debug(log));
@@ -40,5 +40,13 @@ m.Bookmark.belongsTo(m.User);
 
 // DBにテーブル定義が存在しない場合は自動的に作成する
 sequelize.sync();
+
+// 管理者が一人も存在しない場合、起動時に初期アカウントを作成する
+m.Administrator.count()
+	.then((count) => {
+		if (count === 0) {
+			m.Administrator.create(config['superAccount']);
+		}
+	});
 
 export default m;

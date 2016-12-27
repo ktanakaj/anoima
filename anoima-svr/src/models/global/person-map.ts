@@ -95,7 +95,7 @@ export default function (sequelize: Sequelize.Sequelize) {
 					return r.string(16, "abcdefghijklmnopqrstuvwxyz0123456789");
 				},
 			},
-		});
-
+		}
+	);
 	return PersonMap;
 };

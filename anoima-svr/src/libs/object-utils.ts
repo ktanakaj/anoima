@@ -24,7 +24,7 @@ function get(obj: Object, key: string): any {
  * @param key プロパティのキー。"info.id" のように階層的に指定可能。
  * @param value 設定する値。
  */
-function set(obj: Object, key: string, value: any) {
+function set(obj: Object, key: string, value: any): void {
 	const keys = key.split(".");
 	for (let i = 0; i < keys.length - 1; i++) {
 		// 途中の階層がない場合、空のオブジェクトを詰める
@@ -35,6 +35,26 @@ function set(obj: Object, key: string, value: any) {
 		obj = obj[keys[i]];
 	}
 	obj[keys[keys.length - 1]] = value;
+}
+
+/**
+ * オブジェクトのプロパティをコピーする。
+ * @param target コピーされるオブジェクト。
+ * @param source コピー元のオブジェクト。
+ * @param includes 指定されたプロパティのみをコピーする。
+ */
+function copy(target: Object, source: Object, includes?: Array<string>): void {
+	if (includes === undefined) {
+		Object.assign(target, source);
+		return;
+	}
+	for (let key of includes) {
+		// 存在するプロパティのみをコピーする
+		let value = source[key];
+		if (value !== undefined) {
+			target[key] = value;
+		}
+	}
 }
 
 /**
@@ -70,5 +90,6 @@ function mergeArray(objs1: Array<Object>, objs2: Array<Object>, idKey1: string, 
 export default {
 	get: get,
 	set: set,
+	copy: copy,
 	mergeArray: mergeArray,
 };

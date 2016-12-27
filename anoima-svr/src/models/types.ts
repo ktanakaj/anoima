@@ -116,11 +116,17 @@ export interface AdministratorAttributes {
 	id?: number;
 	mailAddress?: string;
 	password?: string;
+	role?: string;
 	createdAt?: Date;
 	updatedAt?: Date;
 	deletedAt?: Date;
 }
 
-export interface AdministratorInstance extends Sequelize.Instance<AdministratorAttributes>, AdministratorAttributes { }
+export interface AdministratorInstance extends Sequelize.Instance<AdministratorAttributes>, AdministratorAttributes {
+	comparePassword(password: string): boolean;
+	hashPassword(): void;
+}
 
-export interface AdministratorModel extends Sequelize.Model<AdministratorInstance, AdministratorAttributes> { }
+export interface AdministratorModel extends Sequelize.Model<AdministratorInstance, AdministratorAttributes> {
+	passwordToHash(password: string, salt?: string): string;
+}

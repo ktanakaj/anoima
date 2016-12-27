@@ -7,6 +7,7 @@ import * as config from 'config';
 import * as log4js from 'log4js';
 import * as cookieParser from 'cookie-parser';
 import * as bodyParser from 'body-parser';
+import * as session from 'express-session';
 import 'source-map-support/register';
 import fileUtils from './libs/file-utils';
 
@@ -21,6 +22,7 @@ app.use(log4js.connectLogger(log4js.getLogger('access'), {
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(session(config['session']));
 app.set('views', __dirname + '/../views');
 app.set('view engine', 'ejs');
 
@@ -34,11 +36,12 @@ app.use(function (req, res, next) {
 	next();
 });
 
-// Passportの初期化とJson Web Token認証登録
+// Passportの初期化
 import * as passport from 'passport';
-//import passportHelper from './libs/passport-helper';
-//app.use(passport.initialize());
-//passportHelper.initForJwt(passport);
+import passportHelper from './libs/passport-helper';
+app.use(passport.initialize());
+app.use(passport.session());
+passportHelper.initAdminAuth(passport);
 
 // ルーティング設定。routesフォルダの全ファイルをapp.use()可能な形式として読み込み
 const baseDir = path.join(__dirname, "routes");

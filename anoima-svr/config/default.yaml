@@ -4,6 +4,11 @@
     ja: "あの人は今？"
   version: 0.0.2
   webappbase: "/"
+  session:
+    secret: "jiotsrfjkh54r89ysrgehuigruihregui"
+    resave: false
+    saveUninitialized: false
+    cookie:
   sequelize:
     global:
       database: "database"
@@ -75,6 +80,10 @@
     expire: 604800 # 一週間
   password:
     algorithm: "sha256"
+  superAccount:
+    mailAddress: 'admin'
+    password: 'admin01'
+    role: 'super'
   log4js:
     appenders:
       - type: "datefile"
@@ -241,3 +250,8 @@
         in: header
         name: Authorization
         description: 認証トークン
+      AdminSessionId:
+        type: apiKey
+        in: header
+        name: Cookie
+        description: 管理者セッションID

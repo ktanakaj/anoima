@@ -12,13 +12,15 @@ import fileUtils from '../../libs/file-utils';
 import * as t from '../types';
 const random = new Random();
 const logger = log4js.getLogger('debug');
-const dbconfigs = config['sequelize']['shardable'];
+const dbconfigs: Array<Object> = config['sequelize']['shardable'];
 
 // 水平分割された複数DBへの接続を作成する
 let db: { sequelize: Sequelize.Sequelize, Person?: t.PersonModel, Information?: t.InformationModel, Comment?: t.CommentModel, Vote?: t.VoteModel }[] = [];
-for (let dbconfig of dbconfigs) {
+for (let i = 0; i < dbconfigs.length; i++) {
+	let dbconfig = dbconfigs[i];
 	let options = dbconfig['options'] || {};
-	options['logging'] = options['logging'] || ((log) => logger.debug(log));
+	// DB番号もログ出力する
+	options['logging'] = options['logging'] || ((log) => logger.debug(`#${i}: ${log}`));
 
 	let sequelize = new Sequelize(
 		dbconfig['database'],
