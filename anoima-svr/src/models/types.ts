@@ -160,8 +160,10 @@ export interface VoteModel extends Sequelize.Model<VoteInstance, VoteAttributes>
  */
 export interface UserAttributes {
 	id?: number;
+	platform?: string;
+	platformId?: string;
 	accessToken?: string;
-	accessSecret?: string;
+	refreshToken?: string;
 	note?: string;
 	createdAt?: Date;
 	updatedAt?: Date;

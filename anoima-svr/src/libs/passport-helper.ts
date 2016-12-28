@@ -4,11 +4,15 @@
  */
 import * as passport from 'passport';
 import * as passportLocal from 'passport-local';
+import * as passportFacebook from 'passport-facebook';
 import * as express from 'express';
 import * as config from 'config';
+import * as log4js from 'log4js';
 import { HttpError } from './http-error';
 import { global, shardable } from '../models';
 const Administrator = global.Administrator;
+const User = global.User;
+const logger = log4js.getLogger('debug');
 
 /**
  * Passportへの管理者用認証設定。
@@ -53,10 +57,63 @@ function initAdminAuth(passport: passport.Passport): void {
 function adminAuthorize(role?: string): express.RequestHandler {
 	return (req: express.Request, res: express.Response, next: express.NextFunction) => {
 		let error = null;
-		if (!req.isAuthenticated()) {
+		// 管理者か一般ユーザーかはロールの有無で判定
+		if (!req.isAuthenticated() || !req.user || !req.user.role) {
 			error = new HttpError(401);
-		} else if (!req.user || (role && req.user.role !== role)) {
+		} else if ((role && req.user.role !== role)) {
 			error = new HttpError(403);
+		}
+		return next(error);
+	};
+}
+
+/**
+ * Passportへの一般ユーザー用認証設定。
+ * @param passport パスポートインスタンス。
+ */
+function initUserAuth(passport: passport.Passport): void {
+	passport.use(new passportFacebook.Strategy(
+		config['passport']['facebook'],
+		async function (accessToken, refreshToken, profile, done) {
+			// Facebook認証が成功した場合、その情報をDBに格納する
+			// ※ リフレッシュトークンはnullの場合がある模様
+			logger.debug(`Facebook callbacked: id=${profile.id}, accessToken=${accessToken}, refreshToken=${refreshToken}`);
+			try {
+				const result = await User.findOrInitialize({
+					where: { platform: 'facebook', platformId: profile.id },
+				});
+				let user = result[0];
+				user.platform = 'facebook';
+				user.platformId = profile.id;
+				user.accessToken = accessToken;
+				user.refreshToken = refreshToken;
+				user = await user.save();
+				return done(null, user);
+			} catch (e) {
+				return done(e);
+			}
+		}
+	));
+
+	passport.serializeUser((user, done) => {
+		done(null, { id: user.id });
+	});
+
+	passport.deserializeUser((user, done) => {
+		done(null, user);
+	});
+}
+
+/**
+ * 一般ユーザーの認証チェック。
+ * @returns チェック関数。
+ */
+function userAuthorize(): express.RequestHandler {
+	return (req: express.Request, res: express.Response, next: express.NextFunction) => {
+		let error = null;
+		// 管理者はNG
+		if (!req.isAuthenticated() || !req.user || req.user.role) {
+			error = new HttpError(401);
 		}
 		return next(error);
 	};
@@ -65,4 +122,6 @@ function adminAuthorize(role?: string): express.RequestHandler {
 export default {
 	initAdminAuth: initAdminAuth,
 	adminAuthorize: adminAuthorize,
+	initUserAuth: initUserAuth,
+	userAuthorize: userAuthorize,
 };

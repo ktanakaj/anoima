@@ -19,16 +19,24 @@ export default function (sequelize: Sequelize.Sequelize) {
 				autoIncrement: true,
 				comment: "ユーザーID",
 			},
-			accessToken: {
-				type: Sequelize.STRING(100),
+			platform: {
+				type: Sequelize.STRING(10),
 				allowNull: false,
-				unique: true,
+				comment: "認証プラットフォーム",
+			},
+			platformId: {
+				type: Sequelize.STRING(255),
+				allowNull: false,
+				comment: "認証プラットフォームID",
+			},
+			accessToken: {
+				type: Sequelize.STRING(255),
+				allowNull: false,
 				comment: "アクセストークン",
 			},
-			accessSecret: {
-				type: Sequelize.STRING(100),
-				allowNull: false,
-				comment: "アクセスシークレット",
+			refreshToken: {
+				type: Sequelize.STRING(255),
+				comment: "リフレッシュトークン",
 			},
 			note: {
 				type: Sequelize.TEXT,
@@ -39,6 +47,12 @@ export default function (sequelize: Sequelize.Sequelize) {
 			// クラスオプション
 			comment: "ユーザー",
 			paranoid: true,
+			indexes: [
+				{
+					fields: ["platform", "platformId"],
+					unique: true,
+				},
+			],
 		}
 	);
 	return User;

@@ -54,11 +54,6 @@ export default function (sequelize: Sequelize.Sequelize) {
 				},
 			},
 			instanceMethods: {
-				/**
-				 * あの人情報を取得する。
-				 * @function getPerson
-				 * @returns あの人インスタンス。
-				 */
 				toJSON: function (): Object {
 					// まずデータをコピー（標準の動作）
 					const o = Object.assign({}, this.dataValues);

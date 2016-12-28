@@ -75,15 +75,17 @@
           pool:
             maxConnections: 10
             maxIdleTime: 300
-  passport:
-    secret: "89refgiuaerh8isrggr98ratge"
-    expire: 604800 # 一週間
   password:
     algorithm: "sha256"
   superAccount:
     mailAddress: 'admin'
     password: 'admin01'
     role: 'super'
+  passport:
+    facebook:
+      clientID: "PLEASE_SET_YOUR_APP_ID"
+      clientSecret: "PLEASE_SET_YOUR_APP_SECRET"
+      callbackURL: "http://YOUR_DOMAIN.example/auth/facebook/callback"
   log4js:
     appenders:
       - type: "datefile"
