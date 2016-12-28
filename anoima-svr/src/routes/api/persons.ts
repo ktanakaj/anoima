@@ -27,20 +27,32 @@ const router = express.Router();
  *     description: あの人の一覧を取得する（管理画面用）。
  *     security:
  *       - AdminSessionId: []
+ *     parameters:
+ *       - $ref: '#/parameters/offset'
+ *       - $ref: '#/parameters/limit'
  *     responses:
  *       200:
  *         description: 取得成功
  *         schema:
- *           type: array
- *           items:
- *             $ref: '#/definitions/PersonWithMap'
+ *           type: object
+ *           properties:
+ *             people:
+ *               type: array
+ *               items:
+ *                 $ref: '#/definitions/PersonWithMap'
+ *             count:
+ *               type: integer
+ *               format: int32
+ *               description: 総件数
  */
 router.get('/', passportHelper.adminAuthorize(), async function (req: express.Request, res: express.Response, next: express.NextFunction) {
 	// TODO: n+1問題解消
-	// TODO: ページング
 	// TODO: ビジネスロジックに移動
 	try {
-		const personMaps = await PersonMap.findAll();
+		const offset = validationUtils.toNumber(req.query['offset'] || 0);
+		const limit = validationUtils.toNumber(req.query['limit'] || 50);
+		const count = await PersonMap.count();
+		const personMaps = await PersonMap.findAll({ offset: offset, limit: limit });
 		const people = [];
 		for (let personMap of personMaps) {
 			let person = await personMap.getPerson();
@@ -49,7 +61,10 @@ router.get('/', passportHelper.adminAuthorize(), async function (req: express.Re
 				people.push(person);
 			}
 		}
-		res.json(people);
+		res.json({
+			count: count,
+			people: people,
+		});
 	} catch (e) {
 		next(e);
 	}
@@ -64,10 +79,7 @@ router.get('/', passportHelper.adminAuthorize(), async function (req: express.Re
  *     summary: あの人ランダムx人取得
  *     description: あの人をランダムでx人を取得する。
  *     parameters:
- *       - in: query
- *         name: limit
- *         description: 取得件数
- *         type: number
+ *       - $ref: '#/parameters/limit'
  *     responses:
  *       200:
  *         description: 取得成功
@@ -79,7 +91,7 @@ router.get('/', passportHelper.adminAuthorize(), async function (req: express.Re
  *         $ref: '#/responses/BadRequest'
  */
 router.get('/random', function (req: express.Request, res: express.Response, next: express.NextFunction) {
-	logics.randomPeople(validationUtils.range(req.query['limit'], 0, 100))
+	logics.randomPeople(validationUtils.range(req.query['limit'] || 20, 0, 100))
 		.then(res.json.bind(res))
 		.catch(next);
 });
@@ -118,7 +130,7 @@ router.get('/:key', function (req: express.Request, res: express.Response, next:
  *     summary: あの人新規登録
  *     description: あの人を新規登録する。
  *     security:
- *       - AuthToken: []
+ *       - UserSessionId: []
  *     parameters:
  *       - in: body
  *         name: body
@@ -149,8 +161,10 @@ router.get('/:key', function (req: express.Request, res: express.Response, next:
  *       401:
  *         $ref: '#/responses/Unauthorized'
  */
-router.post('/', function (req: express.Request, res: express.Response, next: express.NextFunction) {
-	logics.createPerson(req.body)
+router.post('/', passportHelper.userAuthorize(), function (req: express.Request, res: express.Response, next: express.NextFunction) {
+	const data = req.body;
+	data.ownerId = req.user.id;
+	logics.createPerson(data)
 		.then(res.json.bind(res))
 		.catch(next);
 });

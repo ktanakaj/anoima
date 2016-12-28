@@ -43,10 +43,6 @@ app.use(passport.initialize());
 app.use(passport.session());
 passportHelper.initAdminAuth(passport);
 passportHelper.initUserAuth(passport);
-// Facebook認証用のパスの登録
-app.get('/auth/facebook', passport.authenticate('facebook'));
-// Facebookからコールバックで呼ばれるパスの登録
-app.get('/auth/facebook/callback', passport.authenticate('facebook', { successRedirect: '/', failureRedirect: '/' }));
 
 // ルーティング設定。routesフォルダの全ファイルをapp.use()可能な形式として読み込み
 const baseDir = path.join(__dirname, "routes");

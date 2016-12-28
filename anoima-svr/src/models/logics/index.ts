@@ -20,7 +20,7 @@ const PersonMap = global.PersonMap;
  * @param limit 取得件数。
  * @returns あの人配列。
  */
-async function randomPeople(limit: number = 20): Promise<t.PersonInstance[]> {
+async function randomPeople(limit: number): Promise<t.PersonInstance[]> {
 	// ランダムで良いので、シャーディングされたテーブルのうち
 	// どれかから公開のものを指定件数取得する
 	const db = randomDb();

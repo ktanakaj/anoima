@@ -56,18 +56,37 @@ const router = express.Router();
  *     description: 管理者の一覧を取得する。
  *     security:
  *       - AdminSessionId: []
+ *     parameters:
+ *       - $ref: '#/parameters/offset'
+ *       - $ref: '#/parameters/limit'
  *     responses:
  *       200:
  *         description: 取得成功
  *         schema:
- *           type: array
- *           items:
- *             $ref: '#/definitions/Administrator'
+ *           type: object
+ *           properties:
+ *             administrators:
+ *               type: array
+ *               items:
+ *                 $ref: '#/definitions/Administrator'
+ *             count:
+ *               type: integer
+ *               format: int32
+ *               description: 総件数
  */
-router.get('/', passportHelper.adminAuthorize('super'), function (req: express.Request, res: express.Response, next: express.NextFunction) {
-	Administrator.findAll()
-		.then(res.json.bind(res))
-		.catch(next);
+router.get('/', passportHelper.adminAuthorize('super'), async function (req: express.Request, res: express.Response, next: express.NextFunction) {
+	try {
+		const offset = validationUtils.toNumber(req.query['offset'] || 0);
+		const limit = validationUtils.toNumber(req.query['limit'] || 50);
+		const count = await Administrator.count();
+		const administrators = await Administrator.findAll({ offset: offset, limit: limit });
+		res.json({
+			administrators: administrators,
+			count: count,
+		});
+	} catch (e) {
+		next(e);
+	}
 });
 
 /**

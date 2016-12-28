@@ -229,6 +229,18 @@
         name: key
         description: あの人キー
         type: string
+      offset:
+        in: query
+        name: offset
+        description: 開始位置
+        type: integer
+        format: int32
+      limit:
+        in: query
+        name: limit
+        description: 取得件数
+        type: integer
+        format: int32
     responses:
       BadRequest:
         description: バリデーションNG
@@ -247,11 +259,11 @@
         schema:
           type: string
     securityDefinitions:
-      AuthToken:
+      UserSessionId:
         type: apiKey
         in: header
-        name: Authorization
-        description: 認証トークン
+        name: Cookie
+        description: ユーザーセッションID
       AdminSessionId:
         type: apiKey
         in: header

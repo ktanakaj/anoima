@@ -79,10 +79,16 @@ function initUserAuth(passport: passport.Passport): void {
 			// ※ リフレッシュトークンはnullの場合がある模様
 			logger.debug(`Facebook callbacked: id=${profile.id}, accessToken=${accessToken}, refreshToken=${refreshToken}`);
 			try {
-				const result = await User.findOrInitialize({
+				const options = {
 					where: { platform: 'facebook', platformId: profile.id },
-				});
+					paranoid: true,
+				};
+				const result = await User.findOrInitialize(options);
 				let user = result[0];
+				if (user.deletedAt) {
+					// 削除ユーザー=BANなので再登録不可
+					return done(new HttpError(403));
+				}
 				user.platform = 'facebook';
 				user.platformId = profile.id;
 				user.accessToken = accessToken;

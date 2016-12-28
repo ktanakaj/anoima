@@ -47,6 +47,19 @@ export default function (sequelize: Sequelize.Sequelize) {
 			// クラスオプション
 			comment: "ユーザー",
 			paranoid: true,
+			defaultScope: {
+				attributes: {
+					exclude: ['accessToken', 'refreshToken'],
+				},
+				order: [['platform', 'ASC'], ['platformId', 'ASC']],
+			},
+			scopes: {
+				withToken: {
+					attributes: {
+						include: ['accessToken', 'refreshToken'],
+					},
+				},
+			},
 			indexes: [
 				{
 					fields: ["platform", "platformId"],
