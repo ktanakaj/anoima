@@ -37,12 +37,8 @@ app.use(function (req, res, next) {
 });
 
 // Passportの初期化
-import * as passport from 'passport';
-import passportHelper from './libs/passport-helper';
-app.use(passport.initialize());
-app.use(passport.session());
-passportHelper.initAdminAuth(passport);
-passportHelper.initUserAuth(passport);
+import passportManager from './libs/passport-manager';
+passportManager.initialize(app);
 
 // ルーティング設定。routesフォルダの全ファイルをapp.use()可能な形式として読み込み
 const baseDir = path.join(__dirname, "routes");

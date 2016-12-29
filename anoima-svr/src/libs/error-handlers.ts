@@ -3,7 +3,6 @@
  * @module ./libs/error-handlers
  */
 import * as express from 'express';
-const app = express();
 import { HttpError } from './http-error';
 import * as log4js from 'log4js';
 const logger = log4js.getLogger('error');
@@ -118,7 +117,7 @@ let handlers = {
 };
 
 // 開発中と運用で一部エラーハンドラーを切り替え
-if (app.get('env') === 'development') {
+if (process.env.NODE_ENV === 'development') {
 	handlers.handleError = handleErrorForDevelop;
 }
 

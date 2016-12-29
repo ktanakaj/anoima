@@ -1,6 +1,6 @@
 /**
- * Passport関連の共通処理モジュール。
- * @module ./libs/passport-helper
+ * Passport認証を管理する共通処理モジュール。
+ * @module ./libs/passport-manager
  */
 import * as passport from 'passport';
 import * as passportLocal from 'passport-local';
@@ -9,16 +9,21 @@ import * as express from 'express';
 import * as config from 'config';
 import * as log4js from 'log4js';
 import { HttpError } from './http-error';
-import { global, shardable } from '../models';
+import { global, shardable, types } from '../models';
 const Administrator = global.Administrator;
 const User = global.User;
 const logger = log4js.getLogger('debug');
 
 /**
- * Passportへの管理者用認証設定。
- * @param passport パスポートインスタンス。
+ * Passportの初期化を行う。
+ * @param app Expressインスタンス。
  */
-function initAdminAuth(passport: passport.Passport): void {
+function initialize(app: express.Express): void {
+	// パスポートの初期化を実行
+	app.use(passport.initialize());
+	app.use(passport.session());
+
+	// 管理者認証設定
 	passport.use(new passportLocal.Strategy(
 		{
 			usernameField: 'mailAddress',
@@ -40,12 +45,37 @@ function initAdminAuth(passport: passport.Passport): void {
 		}
 	));
 
-	passport.serializeUser((admin, done) => {
-		done(null, { id: admin.id, role: admin.role });
+	// 一般ユーザー（Facebook）認証設定
+	// ※ アプリ仕様的に匿名垢は危険性が高いので一般ユーザーのローカル認証はやらない
+	passport.use(new passportFacebook.Strategy(
+		config['passport']['facebook'],
+		async function (accessToken, refreshToken, profile, done) {
+			// Facebook認証が成功した場合、その情報をDBに格納する
+			// ※ リフレッシュトークンはnullの場合がある模様
+			logger.debug(`Facebook callbacked: id=${profile.id}, accessToken=${accessToken}, refreshToken=${refreshToken}`);
+			try {
+				const user = await User.createOrUpdateUser('facebook', profile.id, accessToken, refreshToken);
+				return done(null, user);
+			} catch (e) {
+				return done(e);
+			}
+		}
+	));
+
+	// 認証成功時のシリアライズ
+	passport.serializeUser((user, done) => {
+		// AdministratorとUserの2種類が渡される。roleの有無で判別
+		const u = { id: user.id, role: null };
+		if (user.role !== undefined) {
+			u.role = user.role;
+		}
+		done(null, u);
 	});
 
-	passport.deserializeUser((admin, done) => {
-		done(null, admin);
+	// 認証中のユーザー情報デシリアライズ
+	passport.deserializeUser((user, done) => {
+		// デシリアライズはそのまま復元するだけ
+		done(null, user);
 	});
 }
 
@@ -68,49 +98,6 @@ function adminAuthorize(role?: string): express.RequestHandler {
 }
 
 /**
- * Passportへの一般ユーザー用認証設定。
- * @param passport パスポートインスタンス。
- */
-function initUserAuth(passport: passport.Passport): void {
-	passport.use(new passportFacebook.Strategy(
-		config['passport']['facebook'],
-		async function (accessToken, refreshToken, profile, done) {
-			// Facebook認証が成功した場合、その情報をDBに格納する
-			// ※ リフレッシュトークンはnullの場合がある模様
-			logger.debug(`Facebook callbacked: id=${profile.id}, accessToken=${accessToken}, refreshToken=${refreshToken}`);
-			try {
-				const options = {
-					where: { platform: 'facebook', platformId: profile.id },
-					paranoid: true,
-				};
-				const result = await User.findOrInitialize(options);
-				let user = result[0];
-				if (user.deletedAt) {
-					// 削除ユーザー=BANなので再登録不可
-					return done(new HttpError(403));
-				}
-				user.platform = 'facebook';
-				user.platformId = profile.id;
-				user.accessToken = accessToken;
-				user.refreshToken = refreshToken;
-				user = await user.save();
-				return done(null, user);
-			} catch (e) {
-				return done(e);
-			}
-		}
-	));
-
-	passport.serializeUser((user, done) => {
-		done(null, { id: user.id });
-	});
-
-	passport.deserializeUser((user, done) => {
-		done(null, user);
-	});
-}
-
-/**
  * 一般ユーザーの認証チェック。
  * @returns チェック関数。
  */
@@ -126,8 +113,7 @@ function userAuthorize(): express.RequestHandler {
 }
 
 export default {
-	initAdminAuth: initAdminAuth,
+	initialize: initialize,
 	adminAuthorize: adminAuthorize,
-	initUserAuth: initUserAuth,
 	userAuthorize: userAuthorize,
 };

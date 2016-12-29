@@ -39,7 +39,7 @@
  */
 import * as express from 'express';
 import * as passport from 'passport';
-import passportHelper from '../../libs/passport-helper';
+import passportManager from '../../libs/passport-manager';
 import validationUtils from '../../libs/validation-utils';
 import objectUtils from '../../libs/object-utils';
 import { global } from '../../models';
@@ -74,7 +74,7 @@ const router = express.Router();
  *               format: int32
  *               description: 総件数
  */
-router.get('/', passportHelper.adminAuthorize('super'), async function (req: express.Request, res: express.Response, next: express.NextFunction) {
+router.get('/', passportManager.adminAuthorize('super'), async function (req: express.Request, res: express.Response, next: express.NextFunction) {
 	try {
 		const offset = validationUtils.toNumber(req.query['offset'] || 0);
 		const limit = validationUtils.toNumber(req.query['limit'] || 50);
@@ -107,7 +107,7 @@ router.get('/', passportHelper.adminAuthorize('super'), async function (req: exp
  *         schema:
  *           $ref: '#/definitions/Administrator'
  */
-router.get('/:id', passportHelper.adminAuthorize('super'), function (req: express.Request, res: express.Response, next: express.NextFunction) {
+router.get('/:id', passportManager.adminAuthorize('super'), function (req: express.Request, res: express.Response, next: express.NextFunction) {
 	Administrator.findById(validationUtils.toNumber(req.params['id']))
 		.then(validationUtils.notFound)
 		.then(res.json.bind(res))
@@ -156,7 +156,7 @@ router.get('/:id', passportHelper.adminAuthorize('super'), function (req: expres
  *       403:
  *         $ref: '#/responses/Forbidden'
  */
-router.post('/', passportHelper.adminAuthorize('super'), async function (req: express.Request, res: express.Response, next: express.NextFunction) {
+router.post('/', passportManager.adminAuthorize('super'), async function (req: express.Request, res: express.Response, next: express.NextFunction) {
 	try {
 		const admin = await Administrator.create(req.body);
 		// パスワードは返さない（deleteで何故か消せないのでnullで上書き）
@@ -201,7 +201,7 @@ router.post('/', passportHelper.adminAuthorize('super'), async function (req: ex
  *       401:
  *         $ref: '#/responses/Unauthorized'
  */
-router.put('/me', passportHelper.adminAuthorize(), async function (req: express.Request, res: express.Response, next: express.NextFunction) {
+router.put('/me', passportManager.adminAuthorize(), async function (req: express.Request, res: express.Response, next: express.NextFunction) {
 	try {
 		let admin = await Administrator.findById(req.user.id);
 		validationUtils.notFound(admin);
@@ -256,6 +256,27 @@ router.post('/authenticate', passport.authenticate('local'), function (req: expr
 	// パスワードは返さない（deleteで何故か消せないのでnullで上書き）
 	req.user.password = null;
 	res.json(req.user);
+});
+
+/**
+ * @swagger
+ * /administrators/logout:
+ *   post:
+ *     tags:
+ *       - administrators
+ *     summary: ログアウト
+ *     description: ログアウトする。
+ *     security:
+ *       - AdminSessionId: []
+ *     responses:
+ *       200:
+ *         description: ログアウト成功
+ *       401:
+ *         $ref: '#/responses/Unauthorized'
+ */
+router.post('/logout', passportManager.adminAuthorize(), function (req: express.Request, res: express.Response, next: express.NextFunction) {
+	req.logout();
+	res.end();
 });
 
 module.exports = router;

@@ -60,6 +60,25 @@ export default function (sequelize: Sequelize.Sequelize) {
 					},
 				},
 			},
+			classMethods: {
+				createOrUpdateUser: async function (platform, platformId, accessToken, refreshToken): Promise<UserInstance> {
+					const options = {
+						where: { platform: platform, platformId: platformId },
+						paranoid: true,
+					};
+					const result = await User.findOrInitialize(options);
+					let user = result[0];
+					if (user.deletedAt) {
+						// 削除ユーザー=BANなので再登録不可
+						throw new Error("This user can't be registered");
+					}
+					user.platform = platform;
+					user.platformId = platformId;
+					user.accessToken = accessToken;
+					user.refreshToken = refreshToken;
+					return user.save();
+				}
+			},
 			indexes: [
 				{
 					fields: ["platform", "platformId"],

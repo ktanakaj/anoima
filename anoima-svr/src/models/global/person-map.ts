@@ -45,8 +45,21 @@ export default function (sequelize: Sequelize.Sequelize) {
 				},
 			},
 			classMethods: {
-				findByKey: async function (key): Promise<PersonMapInstance> {
+				findByKey: async function (key: string): Promise<PersonMapInstance> {
 					return PersonMap.findOne({ where: { key: key } });
+				},
+				findAllWithPerson: async function (options?: Sequelize.FindOptions): Promise<PersonInstance[]> {
+					const personMaps = await PersonMap.findAll(options);
+					const people = [];
+					// TODO: n+1問題解消
+					for (let personMap of personMaps) {
+						let person = await personMap.getPerson();
+						if (person) {
+							person.map = personMap;
+							people.push(person);
+						}
+					}
+					return people;
 				},
 				randomCreate: async function (): Promise<PersonMapInstance> {
 					const no = randomDb();

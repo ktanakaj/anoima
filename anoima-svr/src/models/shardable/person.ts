@@ -67,7 +67,7 @@ export default function (sequelize: Sequelize.Sequelize) {
 				},
 			},
 			classMethods: {
-				random: async function (limit): Promise<PersonInstance[]> {
+				random: async function (limit: number): Promise<PersonInstance[]> {
 					// ※ 厳密にランダムである必要はないので、
 					//    ランダムなとこから指定件数*2ぐらいでとって、
 					//    その中からランダムなデータを返す。

@@ -21,11 +21,12 @@
  */
 import * as express from 'express';
 import * as passport from 'passport';
-import passportHelper from '../../libs/passport-helper';
+import passportManager from '../../libs/passport-manager';
 import validationUtils from '../../libs/validation-utils';
 import objectUtils from '../../libs/object-utils';
 import { global } from '../../models';
 const User = global.User;
+const Bookmark = global.Bookmark;
 const router = express.Router();
 
 /**
@@ -56,7 +57,7 @@ const router = express.Router();
  *               format: int32
  *               description: 総件数
  */
-router.get('/', passportHelper.adminAuthorize(), async function (req: express.Request, res: express.Response, next: express.NextFunction) {
+router.get('/', passportManager.adminAuthorize(), async function (req: express.Request, res: express.Response, next: express.NextFunction) {
 	try {
 		const offset = validationUtils.toNumber(req.query['offset'] || 0);
 		const limit = validationUtils.toNumber(req.query['limit'] || 50);
@@ -89,7 +90,7 @@ router.get('/', passportHelper.adminAuthorize(), async function (req: express.Re
  *         schema:
  *           $ref: '#/definitions/User'
  */
-router.get('/:id', passportHelper.adminAuthorize(), function (req: express.Request, res: express.Response, next: express.NextFunction) {
+router.get('/:id', passportManager.adminAuthorize(), function (req: express.Request, res: express.Response, next: express.NextFunction) {
 	User.findById(validationUtils.toNumber(req.params['id']))
 		.then(validationUtils.notFound)
 		.then(res.json.bind(res))
@@ -128,7 +129,7 @@ router.get('/:id', passportHelper.adminAuthorize(), function (req: express.Reque
  *       401:
  *         $ref: '#/responses/Unauthorized'
  */
-router.put('/:id', passportHelper.adminAuthorize(), async function (req: express.Request, res: express.Response, next: express.NextFunction) {
+router.put('/:id', passportManager.adminAuthorize(), async function (req: express.Request, res: express.Response, next: express.NextFunction) {
 	try {
 		let user = await User.findById(validationUtils.toNumber(req.params['id']));
 		validationUtils.notFound(user);
@@ -164,12 +165,153 @@ router.put('/:id', passportHelper.adminAuthorize(), async function (req: express
  *       404:
  *         $ref: '#/responses/NotFound'
  */
-router.delete('/:id', passportHelper.adminAuthorize(), function (req: express.Request, res: express.Response, next: express.NextFunction) {
+router.delete('/:id', passportManager.adminAuthorize(), function (req: express.Request, res: express.Response, next: express.NextFunction) {
 	User.findById(validationUtils.toNumber(req.params['id']))
 		.then(validationUtils.notFound)
 		.then((user) => user.destroy())
 		.then(res.json.bind(res))
 		.catch(next);
 });
+
+/**
+ * @swagger
+ * /users/me:
+ *   get:
+ *     tags:
+ *       - users
+ *     summary: ユーザーの自分の情報
+ *     description: 自分の情報を取得する。
+ *     security:
+ *       - UserSessionId: []
+ *     responses:
+ *       200:
+ *         description: 取得成功
+ *         schema:
+ *           $ref: '#/definitions/User'
+ *       401:
+ *         $ref: '#/responses/Unauthorized'
+ */
+router.get('/me', passportManager.userAuthorize(), async function (req: express.Request, res: express.Response, next: express.NextFunction) {
+	User.findById(req.user.id)
+		.then(validationUtils.notFound)
+		.then(res.json.bind(res))
+		.catch(next);
+});
+
+/**
+ * @swagger
+ * /users/me/bookmarks:
+ *   get:
+ *     tags:
+ *       - users
+ *     summary: ユーザーのブックマーク一覧
+ *     description: 自分のブックマーク一覧を取得する。
+ *     security:
+ *       - UserSessionId: []
+ *     parameters:
+ *       - $ref: '#/parameters/offset'
+ *       - $ref: '#/parameters/limit'
+ *     responses:
+ *       200:
+ *         description: 取得成功
+ *         schema:
+ *           type: object
+ *           properties:
+ *             users:
+ *               type: array
+ *               items:
+ *                 $ref: '#/definitions/BookmarkWithPerson'
+ *             count:
+ *               type: integer
+ *               format: int32
+ *               description: 総件数
+ *       400:
+ *         $ref: '#/responses/BadRequest'
+ *       401:
+ *         $ref: '#/responses/Unauthorized'
+ */
+router.get('/me/bookmarks', passportManager.userAuthorize(), async function (req: express.Request, res: express.Response, next: express.NextFunction) {
+	try {
+		const offset = validationUtils.toNumber(req.query['offset'] || 0);
+		const limit = validationUtils.toNumber(req.query['limit'] || 50);
+		const count = await Bookmark.scope({ method: ['byUser', req.user.id] }).count();
+		const bookmarks = await Bookmark.findAllByUser(req.user.id, { offset: offset, limit: limit });
+		res.json({
+			bookmarks: bookmarks,
+			count: count,
+		});
+	} catch (e) {
+		next(e);
+	}
+});
+
+/**
+ * @swagger
+ * /users/logout:
+ *   post:
+ *     tags:
+ *       - users
+ *     summary: ログアウト
+ *     description: ログアウトする。
+ *     security:
+ *       - UserSessionId: []
+ *     responses:
+ *       200:
+ *         description: ログアウト成功
+ *       401:
+ *         $ref: '#/responses/Unauthorized'
+ */
+router.post('/logout', passportManager.userAuthorize(), function (req: express.Request, res: express.Response, next: express.NextFunction) {
+	req.logout();
+	res.end();
+});
+
+/**
+ * @swagger
+ * /users/auth/dummy:
+ *   post:
+ *     tags:
+ *       - users
+ *     summary: 開発用ダミーユーザー認証
+ *     description: 渡されたIDでログインを行う。
+ *     parameters:
+ *       - in: body
+ *         name: body
+ *         description: ユーザー情報
+ *         required: true
+ *         schema:
+ *           type: object
+ *           required:
+ *             - platformId
+ *           properties:
+ *             platformId:
+ *               type: string
+ *               description: プラットフォームID
+ *     responses:
+ *       200:
+ *         description: 認証OK
+ *         schema:
+ *           type: object
+ *           properties:
+ *             token:
+ *               type: string
+ *               description: 認証トークン
+ *       403:
+ *         $ref: '#/responses/Forbidden'
+ */
+if (process.env.NODE_ENV === 'development') {
+	// ※ OAuth認証は本物のアカウントが必要なので、開発時はダミーでログイン可能にする
+	router.post('/auth/dummy', function (req: express.Request, res: express.Response, next: express.NextFunction) {
+		User.createOrUpdateUser('dummy', req.body['platformId'], '', null)
+			.then((user) => {
+				req.login(user, (err) => {
+					if (err) return next(err);
+					res.json(user);
+				});
+
+			})
+			.catch(next);
+	});
+}
 
 module.exports = router;

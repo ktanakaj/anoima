@@ -11,7 +11,7 @@
  *   description: あの人関連API
  */
 import * as express from 'express';
-import passportHelper from '../../libs/passport-helper';
+import passportManager from '../../libs/passport-manager';
 import validationUtils from '../../libs/validation-utils';
 import { global, shardable, logics } from '../../models';
 const PersonMap = global.PersonMap;
@@ -45,25 +45,15 @@ const router = express.Router();
  *               format: int32
  *               description: 総件数
  */
-router.get('/', passportHelper.adminAuthorize(), async function (req: express.Request, res: express.Response, next: express.NextFunction) {
-	// TODO: n+1問題解消
-	// TODO: ビジネスロジックに移動
+router.get('/', passportManager.adminAuthorize(), async function (req: express.Request, res: express.Response, next: express.NextFunction) {
 	try {
 		const offset = validationUtils.toNumber(req.query['offset'] || 0);
 		const limit = validationUtils.toNumber(req.query['limit'] || 50);
 		const count = await PersonMap.count();
-		const personMaps = await PersonMap.findAll({ offset: offset, limit: limit });
-		const people = [];
-		for (let personMap of personMaps) {
-			let person = await personMap.getPerson();
-			if (person) {
-				person.map = personMap;
-				people.push(person);
-			}
-		}
+		const people = await PersonMap.findAllWithPerson({ offset: offset, limit: limit });
 		res.json({
-			count: count,
 			people: people,
+			count: count,
 		});
 	} catch (e) {
 		next(e);
@@ -161,7 +151,7 @@ router.get('/:key', function (req: express.Request, res: express.Response, next:
  *       401:
  *         $ref: '#/responses/Unauthorized'
  */
-router.post('/', passportHelper.userAuthorize(), function (req: express.Request, res: express.Response, next: express.NextFunction) {
+router.post('/', passportManager.userAuthorize(), function (req: express.Request, res: express.Response, next: express.NextFunction) {
 	const data = req.body;
 	data.ownerId = req.user.id;
 	logics.createPerson(data)

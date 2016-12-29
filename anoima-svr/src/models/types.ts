@@ -39,6 +39,12 @@ export interface PersonMapModel extends Sequelize.Model<PersonMapInstance, Perso
 	 */
 	findByKey(key: string): Promise<PersonMapInstance>;
 	/**
+	 * あの人一覧をマップから取得する。
+	 * @param options 検索オプション。※PersonMapの検索に用いられる
+	 * @returns あの人配列。
+	 */
+	findAllWithPerson(options?: Sequelize.FindOptions): Promise<PersonInstance[]>;
+	/**
 	 * ランダムなKEY/DBであの人ID-キーマッピングを生成する。
 	 * @returns あの人ID-キーマッピングインスタンス。
 	 */
@@ -178,7 +184,18 @@ export interface UserInstance extends Sequelize.Instance<UserAttributes>, UserAt
 /**
  * ユーザーモデル。
  */
-export interface UserModel extends Sequelize.Model<UserInstance, UserAttributes> { }
+export interface UserModel extends Sequelize.Model<UserInstance, UserAttributes> {
+	/**
+	 * 外部プラットフォームで認証されたユーザーを登録する。
+	 * @param platform プラットフォーム名。
+	 * @param platformId プラットフォームでのID。
+	 * @param accessToken アクセストークン。
+	 * @param refreshToken リフレッシュトークン。
+	 * @returns ユーザー情報。
+	 * @throws アカウントがBANされている場合。
+	 */
+	createOrUpdateUser(platform, platformId, accessToken, refreshToken): Promise<UserInstance>;
+}
 
 /**
  * ブックマーク属性値。
@@ -193,12 +210,22 @@ export interface BookmarkAttributes {
 /**
  * ブックマークインスタンス。
  */
-export interface BookmarkInstance extends Sequelize.Instance<BookmarkAttributes>, BookmarkAttributes { }
+export interface BookmarkInstance extends Sequelize.Instance<BookmarkAttributes>, BookmarkAttributes {
+	personMap?: PersonMapInstance;
+	person?: PersonInstance;
+}
 
 /**
  * ブックマークモデル。
  */
-export interface BookmarkModel extends Sequelize.Model<BookmarkInstance, BookmarkAttributes> { }
+export interface BookmarkModel extends Sequelize.Model<BookmarkInstance, BookmarkAttributes> {
+	/**
+	 * ユーザーのブックマーク一覧を取得する。
+	 * @param options 検索オプション。※Bookmarkの検索に用いられる
+	 * @returns ブックマーク配列。
+	 */
+	findAllByUser(userId: number, options?: Sequelize.FindOptions): Promise<BookmarkInstance[]>;
+}
 
 /**
  * 管理者属性値。
