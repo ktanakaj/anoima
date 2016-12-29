@@ -140,6 +140,7 @@ router.get('/:id', passportManager.adminAuthorize('super'), function (req: expre
  *               description: 管理者メールアドレス
  *             password:
  *               type: string
+ *               format: password
  *               description: 管理者パスワード
  *             role:
  *               type: string
@@ -169,6 +170,41 @@ router.post('/', passportManager.adminAuthorize('super'), async function (req: e
 
 /**
  * @swagger
+ * /administrators/{id}:
+ *   delete:
+ *     tags:
+ *       - administrators
+ *     summary: 管理者削除
+ *     description: 管理者を削除する。
+ *     security:
+ *       - AdminSessionId: []
+ *     parameters:
+ *       - $ref: '#/parameters/administratorIdPathParam'
+ *     responses:
+ *       200:
+ *         description: 削除成功
+ *         schema:
+ *           $ref: '#/definitions/Administrator'
+ *       400:
+ *         $ref: '#/responses/BadRequest'
+ *       401:
+ *         $ref: '#/responses/Unauthorized'
+ *       404:
+ *         $ref: '#/responses/NotFound'
+ */
+router.delete('/:id', passportManager.adminAuthorize('super'), async function (req: express.Request, res: express.Response, next: express.NextFunction) {
+	try {
+		const admin = await Administrator.findById(validationUtils.toNumber(req.params['id']));
+		validationUtils.notFound(admin);
+		await admin.destroy();
+		res.json(admin);
+	} catch (e) {
+		next(e);
+	}
+});
+
+/**
+ * @swagger
  * /administrators/me:
  *   put:
  *     tags:
@@ -190,6 +226,7 @@ router.post('/', passportManager.adminAuthorize('super'), async function (req: e
  *               description: 管理者メールアドレス
  *             password:
  *               type: string
+ *               format: password
  *               description: 管理者パスワード
  *     responses:
  *       200:
@@ -217,7 +254,7 @@ router.put('/me', passportManager.adminAuthorize(), async function (req: express
 
 /**
  * @swagger
- * /administrators/authenticate:
+ * /administrators/login:
  *   post:
  *     tags:
  *       - administrators
@@ -239,20 +276,17 @@ router.put('/me', passportManager.adminAuthorize(), async function (req: express
  *               description: 管理者メールアドレス
  *             password:
  *               type: string
+ *               format: password
  *               description: 管理者パスワード
  *     responses:
  *       200:
  *         description: 認証OK
  *         schema:
- *           type: object
- *           properties:
- *             token:
- *               type: string
- *               description: 認証トークン
+ *           $ref: '#/definitions/Administrator'
  *       401:
  *         $ref: '#/responses/Unauthorized'
  */
-router.post('/authenticate', passport.authenticate('local'), function (req: express.Request, res: express.Response, next: express.NextFunction) {
+router.post('/login', passport.authenticate('local'), function (req: express.Request, res: express.Response, next: express.NextFunction) {
 	// パスワードは返さない（deleteで何故か消せないのでnullで上書き）
 	req.user.password = null;
 	res.json(req.user);

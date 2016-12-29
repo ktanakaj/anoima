@@ -58,7 +58,7 @@ export default function (sequelize: Sequelize.Sequelize) {
 					// まずデータをコピー（標準の動作）
 					const o = Object.assign({}, this.dataValues);
 					// その他、独自に詰めている値もあれば出す
-					for (let key of ['map']) {
+					for (let key of ['map', 'information', 'comments']) {
 						if (this[key] !== undefined) {
 							o[key] = this[key];
 						}

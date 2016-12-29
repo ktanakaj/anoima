@@ -46,6 +46,19 @@ export default function (sequelize: Sequelize.Sequelize) {
 			// クラスオプション
 			comment: "あの人情報",
 			paranoid: true,
+			instanceMethods: {
+				toJSON: function (): Object {
+					// まずデータをコピー（標準の動作）
+					const o = Object.assign({}, this.dataValues);
+					// その他、独自に詰めている値もあれば出す
+					for (let key of ['comments']) {
+						if (this[key] !== undefined) {
+							o[key] = this[key];
+						}
+					}
+					return o;
+				},
+			},
 		}
 	);
 	return Information;

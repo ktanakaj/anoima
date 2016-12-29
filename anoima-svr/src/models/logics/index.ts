@@ -73,7 +73,7 @@ async function createPerson(person: t.PersonAttributes): Promise<t.PersonInstanc
 	// あの人情報本体を登録
 	const Person = shardable[map.no].Person;
 	data.id = map.id;
-	const result = await Person.create(data, { fields: ['id', 'ownerId', 'name', 'privacy', 'text'] });
+	const result = await Person.create(data);
 	result.map = map;
 	return result;
 }

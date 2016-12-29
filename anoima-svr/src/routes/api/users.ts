@@ -74,6 +74,31 @@ router.get('/', passportManager.adminAuthorize(), async function (req: express.R
 
 /**
  * @swagger
+ * /users/me:
+ *   get:
+ *     tags:
+ *       - users
+ *     summary: ユーザーの自分の情報
+ *     description: 自分の情報を取得する。
+ *     security:
+ *       - UserSessionId: []
+ *     responses:
+ *       200:
+ *         description: 取得成功
+ *         schema:
+ *           $ref: '#/definitions/User'
+ *       401:
+ *         $ref: '#/responses/Unauthorized'
+ */
+router.get('/me', passportManager.userAuthorize(), async function (req: express.Request, res: express.Response, next: express.NextFunction) {
+	User.findById(req.user.id)
+		.then(validationUtils.notFound)
+		.then(res.json.bind(res))
+		.catch(next);
+});
+
+/**
+ * @swagger
  * /users/{id}:
  *   get:
  *     tags:
@@ -165,37 +190,15 @@ router.put('/:id', passportManager.adminAuthorize(), async function (req: expres
  *       404:
  *         $ref: '#/responses/NotFound'
  */
-router.delete('/:id', passportManager.adminAuthorize(), function (req: express.Request, res: express.Response, next: express.NextFunction) {
-	User.findById(validationUtils.toNumber(req.params['id']))
-		.then(validationUtils.notFound)
-		.then((user) => user.destroy())
-		.then(res.json.bind(res))
-		.catch(next);
-});
-
-/**
- * @swagger
- * /users/me:
- *   get:
- *     tags:
- *       - users
- *     summary: ユーザーの自分の情報
- *     description: 自分の情報を取得する。
- *     security:
- *       - UserSessionId: []
- *     responses:
- *       200:
- *         description: 取得成功
- *         schema:
- *           $ref: '#/definitions/User'
- *       401:
- *         $ref: '#/responses/Unauthorized'
- */
-router.get('/me', passportManager.userAuthorize(), async function (req: express.Request, res: express.Response, next: express.NextFunction) {
-	User.findById(req.user.id)
-		.then(validationUtils.notFound)
-		.then(res.json.bind(res))
-		.catch(next);
+router.delete('/:id', passportManager.adminAuthorize(), async function (req: express.Request, res: express.Response, next: express.NextFunction) {
+	try {
+		const user = await User.findById(validationUtils.toNumber(req.params['id']));
+		validationUtils.notFound(user);
+		await user.destroy();
+		res.json(user);
+	} catch (e) {
+		next(e);
+	}
 });
 
 /**
@@ -291,11 +294,7 @@ router.post('/logout', passportManager.userAuthorize(), function (req: express.R
  *       200:
  *         description: 認証OK
  *         schema:
- *           type: object
- *           properties:
- *             token:
- *               type: string
- *               description: 認証トークン
+ *           $ref: '#/definitions/User'
  *       403:
  *         $ref: '#/responses/Forbidden'
  */

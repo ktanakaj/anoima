@@ -249,7 +249,7 @@
         allOf:
           - $ref: '#/definitions/Bookmark'
           - properties:
-              map:
+              person:
                 $ref: '#/definitions/PersonWithMap'
     parameters:
       personKey:

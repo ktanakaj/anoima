@@ -75,6 +75,23 @@ export interface PersonAttributes {
  */
 export interface PersonInstance extends Sequelize.Instance<PersonAttributes>, PersonAttributes {
 	map?: PersonMapInstance;
+	information?: InformationInstance[];
+	comments?: CommentInstance[];
+
+	/**
+	 * あの人情報を取得する。
+	 * @param options 検索条件。
+	 * @returns あの人情報配列。
+	 */
+	getInformation(options?: Sequelize.FindOptions): Promise<InformationInstance[]>;
+	/**
+	 * あの人に紐づく全コメントを取得する。
+	 *
+	 * ※ Informationにつくものも取れる。
+	 * @param options 検索条件。
+	 * @returns コメント配列。
+	 */
+	getComments(options?: Sequelize.FindOptions): Promise<CommentInstance[]>;
 }
 
 /**
@@ -107,7 +124,22 @@ export interface InformationAttributes {
 /**
  * あの人情報インスタンス。
  */
-export interface InformationInstance extends Sequelize.Instance<InformationAttributes>, InformationAttributes { }
+export interface InformationInstance extends Sequelize.Instance<InformationAttributes>, InformationAttributes {
+	comments?: CommentInstance[];
+
+	/**
+	 * あの人情報に紐づくコメントを取得する。
+	 * @param 検索条件。
+	 * @returns コメント配列。
+	 */
+	getComments(options?: Sequelize.FindOptions): Promise<CommentInstance[]>;
+	/**
+	 * あの人情報に紐づく投票結果を取得する。
+	 * @param 検索条件。
+	 * @returns 投票配列。
+	 */
+	getVotes(options?: Sequelize.FindOptions): Promise<VoteInstance[]>;
+}
 
 /**
  * あの人情報モデル。
@@ -179,7 +211,14 @@ export interface UserAttributes {
 /**
  * ユーザーインスタンス。
  */
-export interface UserInstance extends Sequelize.Instance<UserAttributes>, UserAttributes { }
+export interface UserInstance extends Sequelize.Instance<UserAttributes>, UserAttributes {
+	/**
+	 * ユーザーのブックマーク一覧を取得する。
+	 * @param options 検索オプション。
+	 * @returns ブックマーク配列。
+	 */
+	getBookmarks(options?: Sequelize.FindOptions): Promise<BookmarkInstance[]>;
+}
 
 /**
  * ユーザーモデル。

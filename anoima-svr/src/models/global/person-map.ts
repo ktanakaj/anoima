@@ -41,7 +41,11 @@ export default function (sequelize: Sequelize.Sequelize) {
 			comment: "あの人ID-キーマッピング",
 			instanceMethods: {
 				getPerson: async function (): Promise<PersonInstance> {
-					return shardable[this.no].Person.findById(this.id);
+					const person = await shardable[this.no].Person.findById(this.id);
+					if (person) {
+						person.map = this;
+					}
+					return person;
 				},
 			},
 			classMethods: {
@@ -55,7 +59,6 @@ export default function (sequelize: Sequelize.Sequelize) {
 					for (let personMap of personMaps) {
 						let person = await personMap.getPerson();
 						if (person) {
-							person.map = personMap;
 							people.push(person);
 						}
 					}

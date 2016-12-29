@@ -71,7 +71,6 @@ export default function (sequelize: Sequelize.Sequelize) {
 					for (let bookmark of bookmarks) {
 						bookmark.person = await bookmark.personMap.getPerson();
 						if (bookmark.person) {
-							bookmark.person.map = bookmark.personMap;
 							delete bookmark.personMap;
 							results.push(bookmark);
 						}

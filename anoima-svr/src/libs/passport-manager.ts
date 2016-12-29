@@ -65,11 +65,7 @@ function initialize(app: express.Express): void {
 	// 認証成功時のシリアライズ
 	passport.serializeUser((user, done) => {
 		// AdministratorとUserの2種類が渡される。roleの有無で判別
-		const u = { id: user.id, role: null };
-		if (user.role !== undefined) {
-			u.role = user.role;
-		}
-		done(null, u);
+		done(null, { id: user.id, role: user.role, type: user.role !== undefined ? 'admin' : 'user' });
 	});
 
 	// 認証中のユーザー情報デシリアライズ
@@ -80,6 +76,22 @@ function initialize(app: express.Express): void {
 }
 
 /**
+ * ユーザーor管理者の権限チェック。
+ *
+ * 作者または管理者のみOKのようなAPI用。
+ * @returns チェック関数。
+ */
+function authorize(): express.RequestHandler {
+	return (req: express.Request, res: express.Response, next: express.NextFunction) => {
+		let error = null;
+		if (!req.isAuthenticated()) {
+			error = new HttpError(401);
+		}
+		return next(error);
+	};
+}
+
+/**
  * 管理者の権限チェック。
  * @param status 'super'などユーザーの権限。未指定は何でも可。
  * @returns チェック関数。
@@ -87,8 +99,8 @@ function initialize(app: express.Express): void {
 function adminAuthorize(role?: string): express.RequestHandler {
 	return (req: express.Request, res: express.Response, next: express.NextFunction) => {
 		let error = null;
-		// 管理者か一般ユーザーかはロールの有無で判定
-		if (!req.isAuthenticated() || !req.user || !req.user.role) {
+		// 一般ユーザーはNG
+		if (!req.isAuthenticated() || !req.user || req.user.type === 'user') {
 			error = new HttpError(401);
 		} else if ((role && req.user.role !== role)) {
 			error = new HttpError(403);
@@ -105,15 +117,30 @@ function userAuthorize(): express.RequestHandler {
 	return (req: express.Request, res: express.Response, next: express.NextFunction) => {
 		let error = null;
 		// 管理者はNG
-		if (!req.isAuthenticated() || !req.user || req.user.role) {
+		if (!req.isAuthenticated() || !req.user || req.user.type === 'admin') {
 			error = new HttpError(401);
 		}
 		return next(error);
 	};
 }
 
+/**
+ * 渡されたユーザーIDをHTTPリクエスト内の認証ユーザーから検証する。
+ * ※ 管理者は不一致でもOK
+ * @param req HTTPリクエスト。
+ * @param id 比較するユーザーID。
+ * @throws 検証NG。
+ */
+function validateUserIdOrAdmin(req: express.Request, id: number) {
+	if (!req.isAuthenticated() || !req.user || (req.user.id != id && req.user.type != "admin")) {
+		throw new HttpError(403);
+	}
+}
+
 export default {
 	initialize: initialize,
+	authorize: authorize,
 	adminAuthorize: adminAuthorize,
 	userAuthorize: userAuthorize,
+	validateUserIdOrAdmin: validateUserIdOrAdmin,
 };
