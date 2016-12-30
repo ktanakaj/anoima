@@ -86,7 +86,7 @@ WebアプリはVM起動時に自動的に立ち上がります。
 Webアプリの操作用に、以下のようなサーバーコマンドを用意しています。
 アプリのビルドや再起動などを行う場合は、VMにログインして `anoima-svr`, `anoima-web` ディレクトリでコマンドを実行してください。
 
-* `anoima-svr``
+* `anoima-svr`
     * `npm start` - アプリの起動
         * `npm run production` アプリの起動（運用モード）
     * `npm restart` - アプリの再起動

@@ -452,9 +452,8 @@ router.post('/:key/information', passportManager.userAuthorize(), async function
 		const person = await personMap.getPerson();
 		validationUtils.notFound(person);
 		const data = req.body;
-		data.personId = personMap.id;
 		data.ownerId = req.user.id;
-		const info = await shardable[personMap.no].Information.create(data);
+		const info = await person.createInformation(data);
 		res.json(info);
 	} catch (e) {
 		next(e);
@@ -546,9 +545,8 @@ router.post('/:key/comments', passportManager.userAuthorize(), async function (r
 		const person = await personMap.getPerson();
 		validationUtils.notFound(person);
 		const data = req.body;
-		data.personId = personMap.id;
 		data.ownerId = req.user.id;
-		const comment = await shardable[personMap.no].Comment.create(data, { fields: ['personId', 'ownerId', 'releationship', 'text'] });
+		const comment = await person.createComment(data, { fields: ['personId', 'ownerId', 'releationship', 'text'] });
 		res.json(comment);
 	} catch (e) {
 		next(e);
@@ -603,9 +601,8 @@ router.post('/:key/information/:informationId/comments', passportManager.userAut
 		validationUtils.notFound(info);
 		const data = req.body;
 		data.personId = personMap.id;
-		data.informationId = info.id;
 		data.ownerId = req.user.id;
-		const comment = await shardable[personMap.no].Comment.create(data);
+		const comment = await info.createComment(data);
 		res.json(comment);
 	} catch (e) {
 		next(e);

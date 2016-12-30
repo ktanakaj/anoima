@@ -92,6 +92,18 @@ export interface PersonInstance extends Sequelize.Instance<PersonAttributes>, Pe
 	 * @returns コメント配列。
 	 */
 	getComments(options?: Sequelize.FindOptions): Promise<CommentInstance[]>;
+	/**
+	 * あの人情報を登録する。
+	 * @param options 登録条件。
+	 * @param information あの人情報。
+	 */
+	createInformation(information: InformationAttributes, options?: Sequelize.CreateOptions): Promise<InformationInstance>;
+	/**
+	 * あの人にコメントを登録する。
+	 * @param options 登録条件。
+	 * @param comment コメント。
+	 */
+	createComment(comment: CommentAttributes, options?: Sequelize.CreateOptions): Promise<CommentInstance>;
 }
 
 /**
@@ -139,6 +151,12 @@ export interface InformationInstance extends Sequelize.Instance<InformationAttri
 	 * @returns 投票配列。
 	 */
 	getVotes(options?: Sequelize.FindOptions): Promise<VoteInstance[]>;
+	/**
+	 * あの人情報にコメントを登録する。
+	 * @param options 登録条件。
+	 * @param comment コメント。
+	 */
+	createComment(comment: CommentAttributes, options?: Sequelize.CreateOptions): Promise<CommentInstance>;
 }
 
 /**

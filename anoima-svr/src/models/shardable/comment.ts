@@ -16,6 +16,7 @@ export default function (sequelize: Sequelize.Sequelize) {
 				type: Sequelize.BIGINT.UNSIGNED,
 				allowNull: false,
 				primaryKey: true,
+				autoIncrement: true,
 				comment: "あの人or情報へのコメントID",
 			},
 			personId: {
