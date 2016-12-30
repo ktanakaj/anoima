@@ -20,7 +20,8 @@ doc/*.mwb.*
 anoima-svr/lib
 anoima-svr/out
 anoima-svr/config/local.yaml
-anoima-web/src/bundle.js
+anoima-web/public/bundle.js
+anoima-web/public/bundle.js.map
 anoima-web/out
 anoima-web/obj
 anoima-web/bin

@@ -2,9 +2,9 @@
  * @file webpack設定スクリプト。
  */
 module.exports = {
-    entry: './src/app/main.ts',
+    entry: './public/app/main.ts',
 	output: {
-		path: __dirname + '/src',
+		path: __dirname + '/public',
 		filename: 'bundle.js'
 	},
 	resolve: {
@@ -16,7 +16,6 @@ module.exports = {
 		]
 	},
 	externals: {
-		"moment": "moment",
 	},
 	watchOptions: {
 		poll: 1000
