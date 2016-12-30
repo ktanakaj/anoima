@@ -14,13 +14,11 @@ const router = express.Router();
 // TOPページ
 router.get('/', function (req: express.Request, res: express.Response) {
 	// ※ 言語やパスなど一部動的に埋め込みたいのでnode.js側で生成
-	// 言語はパラメータlang→ヘッダー→デフォルトenの順に判定
+	// 言語はパラメータlang→ヘッダー→デフォルトの順に判定
 	const langs = langParser.parse(req.headers['accept-language']);
 	let lang = req.query.lang || (langs[0] ? langs[0].code : '');
 	if (!config['appName'][lang]) {
-		// TODO: 英語対応したらデフォルト英語にする
-		//lang = 'en';
-		lang = 'ja';
+		lang = config['defaultLang'];
 	}
 	res.render('index', {
 		lang: lang,

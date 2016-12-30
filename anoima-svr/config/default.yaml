@@ -4,6 +4,7 @@
     ja: "あの人は今？"
   version: 0.0.2
   webappbase: "/"
+  defaultLang: ja
   session:
     secret: "jiotsrfjkh54r89ysrgehuigruihregui"
     resave: false
