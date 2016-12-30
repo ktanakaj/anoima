@@ -2,7 +2,7 @@
   appKey: "anoima-svr"
   appName:
     ja: "あの人は今？"
-  version: 0.0.2
+  version: 0.1.0
   webappbase: "/"
   defaultLang: ja
   session:
@@ -127,7 +127,7 @@
     swagger: "2.0"
     info:
       title: "あの人は今？"
-      version: 0.0.2
+      version: 0.1.0
       description: "あの人は今？WebアプリのサーバーサイドAPI。"
     basePath: "/api"
     consumes:

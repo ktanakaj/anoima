@@ -65,7 +65,7 @@ function initialize(app: express.Express): void {
 	// 認証成功時のシリアライズ
 	passport.serializeUser((user, done) => {
 		// AdministratorとUserの2種類が渡される。roleの有無で判別
-		done(null, { id: user.id, role: user.role, type: user.role !== undefined ? 'admin' : 'user' });
+		done(null, { id: user['id'], role: user['role'], type: user['role'] !== undefined ? 'admin' : 'user' });
 	});
 
 	// 認証中のユーザー情報デシリアライズ
@@ -100,9 +100,9 @@ function adminAuthorize(role?: string): express.RequestHandler {
 	return (req: express.Request, res: express.Response, next: express.NextFunction) => {
 		let error = null;
 		// 一般ユーザーはNG
-		if (!req.isAuthenticated() || !req.user || req.user.type === 'user') {
+		if (!req.isAuthenticated() || !req.user || req.user['type'] === 'user') {
 			error = new HttpError(401);
-		} else if ((role && req.user.role !== role)) {
+		} else if ((role && req.user['role'] !== role)) {
 			error = new HttpError(403);
 		}
 		return next(error);
@@ -117,7 +117,7 @@ function userAuthorize(): express.RequestHandler {
 	return (req: express.Request, res: express.Response, next: express.NextFunction) => {
 		let error = null;
 		// 管理者はNG
-		if (!req.isAuthenticated() || !req.user || req.user.type === 'admin') {
+		if (!req.isAuthenticated() || !req.user || req.user['type'] === 'admin') {
 			error = new HttpError(401);
 		}
 		return next(error);
@@ -132,7 +132,7 @@ function userAuthorize(): express.RequestHandler {
  * @throws 検証NG。
  */
 function validateUserIdOrAdmin(req: express.Request, id: number) {
-	if (!req.isAuthenticated() || !req.user || (req.user.id != id && req.user.type != "admin")) {
+	if (!req.isAuthenticated() || !req.user || (req.user.id != id && req.user['type'] != "admin")) {
 		throw new HttpError(403);
 	}
 }

@@ -48,7 +48,7 @@ fileUtils.directoryWalkRecursiveSync(
 	function (realpath) {
 		if (/\.js$/.test(realpath)) {
 			routes.push(realpath);
-			app.use(path.join("/", realpath.replace(baseDir, "").replace(/\.js$/, "")), require(realpath));
+			app.use(path.join("/", realpath.replace(baseDir, "").replace(/\.[jt]s$/, "")), require(realpath));
 		}
 	});
 

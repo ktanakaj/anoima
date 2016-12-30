@@ -42,7 +42,7 @@
 * Node.js v6.9.x
 * MariaDB 5.5.x
 * nginx 1.10.x
-* TypeScript 2.2.x
+* TypeScript 2.1.x
 * Express 4.x
     * Sequelize 3.x
     * Passport 0.3.x

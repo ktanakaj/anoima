@@ -34,8 +34,8 @@ for (let i = 0; i < dbconfigs.length; i++) {
 		__dirname,
 		(realpath) => {
 			const fname = path.basename(realpath);
-			if (/\.js$/.test(fname) && fname != "index.js") {
-				m[S(path.basename(fname, '.js')).camelize().titleCase().s] = sequelize.import(realpath);
+			if (/\.[jt]s$/.test(fname) && fname != "index.js" && fname != "index.ts") {
+				m[S(path.basename(fname).replace(/\.[jt]s$/, '')).camelize().titleCase().s] = sequelize.import(realpath);
 			}
 		});
 
