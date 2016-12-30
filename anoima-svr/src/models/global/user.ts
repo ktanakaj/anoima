@@ -64,12 +64,13 @@ export default function (sequelize: Sequelize.Sequelize) {
 				createOrUpdateUser: async function (platform, platformId, accessToken, refreshToken): Promise<UserInstance> {
 					const options = {
 						where: { platform: platform, platformId: platformId },
-						paranoid: true,
+						paranoid: false,
 					};
 					const result = await User.findOrInitialize(options);
-					let user = result[0];
+					const user = result[0];
 					if (user.deletedAt) {
 						// 削除ユーザー=BANなので再登録不可
+						// TODO: 403 を返したいので区別できるエラーにする
 						throw new Error("This user can't be registered");
 					}
 					user.platform = platform;

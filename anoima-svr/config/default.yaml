@@ -2,7 +2,6 @@
   appKey: "anoima-svr"
   appName:
     ja: "あの人は今？"
-  version: 0.1.0
   webappbase: "/"
   defaultLang: ja
   session:

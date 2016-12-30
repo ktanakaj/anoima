@@ -12,6 +12,7 @@
  */
 import * as express from 'express';
 import * as config from 'config';
+const packagejson = require('../../../package.json');
 const router = express.Router();
 
 /**
@@ -46,7 +47,7 @@ router.get('/', function (req: express.Request, res: express.Response, next: exp
 	res.json({
 		environment: process.env.NODE_ENV,
 		appName: config['appName'],
-		version: config['version'],
+		version: packagejson['version'],
 	});
 });
 
