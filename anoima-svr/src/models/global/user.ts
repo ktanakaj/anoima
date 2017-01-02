@@ -49,15 +49,20 @@ export default function (sequelize: Sequelize.Sequelize) {
 			paranoid: true,
 			defaultScope: {
 				attributes: {
-					exclude: ['accessToken', 'refreshToken'],
+					exclude: ['platformId', 'accessToken', 'refreshToken', 'note'],
 				},
-				order: [['platform', 'ASC'], ['platformId', 'ASC']],
 			},
 			scopes: {
 				withToken: {
 					attributes: {
-						include: ['accessToken', 'refreshToken'],
+						include: ['platformId', 'accessToken', 'refreshToken'],
 					},
+				},
+				withPrivate: {
+					attributes: {
+						include: ['platformId', 'note'],
+					},
+					order: [['platform', 'ASC'], ['platformId', 'ASC']],
 				},
 			},
 			classMethods: {

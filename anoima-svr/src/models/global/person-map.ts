@@ -6,6 +6,7 @@
  */
 import * as Sequelize from 'sequelize';
 import * as Random from 'random-js';
+import objectUtils from '../../libs/object-utils';
 import shardable from '../shardable';
 import { randomDb } from '../shardable';
 import { PersonMapModel, PersonMapInstance, PersonMapAttributes, PersonInstance } from '../types';
@@ -54,14 +55,33 @@ export default function (sequelize: Sequelize.Sequelize) {
 				},
 				findAllWithPerson: async function (options?: Sequelize.FindOptions): Promise<PersonInstance[]> {
 					const personMaps = await PersonMap.findAll(options);
-					const people = [];
-					// TODO: n+1問題解消
-					for (let personMap of personMaps) {
-						let person = await personMap.getPerson();
-						if (person) {
+
+					// DBごとに関連を一括検索してマージ
+					const idsByDb = new Map();
+					for (let map of personMaps) {
+						if (!idsByDb.has(map.no)) {
+							idsByDb.set(map.no, []);
+						}
+						idsByDb.get(map.no).push(map.id);
+					}
+					let people = [];
+					for (let [db, ids] of idsByDb) {
+						let p = await shardable[db].Person.findAll({ where: { id: ids } });
+						people = people.concat(p);
+					}
+
+					// 一応PersonMapのソート順になるようにそちら基準でマージしてPersonベースに詰め直す
+					objectUtils.mergeArray(personMaps, people, 'id', 'id', 'person');
+					people = [];
+					for (let map of personMaps) {
+						if (map.person !== undefined) {
+							let person = map.person;
+							person.map = map;
+							delete map.person;
 							people.push(person);
 						}
 					}
+
 					return people;
 				},
 				randomCreate: async function (): Promise<PersonMapInstance> {

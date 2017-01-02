@@ -18,6 +18,40 @@
  *     required: true
  *     type: integer
  *     format: int32
+ *
+ * definition:
+ *   UserOnlyPublic:
+ *     type: object
+ *     required:
+ *       - id
+ *       - platform
+ *     properties:
+ *       id:
+ *         type: integer
+ *         format: int32
+ *         description: ユーザーID
+ *       platform:
+ *         type: string
+ *         description: 認証プラットフォーム
+ *       createdAt:
+ *         type: string
+ *         format: date-time
+ *         description: 登録日時
+ *       updatedAt:
+ *         type: string
+ *         format: date-time
+ *         description: 更新日時
+ *
+ *   UserWithPrivate:
+ *     allOf:
+ *       - $ref: '#/definitions/UserOnlyPublic'
+ *       - properties:
+ *           platformId:
+ *             type: string
+ *             description: 認証プラットフォームID
+ *           note:
+ *             type: string
+ *             description: ノート
  */
 import * as express from 'express';
 import * as passport from 'passport';
@@ -51,7 +85,7 @@ const router = express.Router();
  *             users:
  *               type: array
  *               items:
- *                 $ref: '#/definitions/User'
+ *                 $ref: '#/definitions/UserWithPrivate'
  *             count:
  *               type: integer
  *               format: int32
@@ -62,7 +96,7 @@ router.get('/', passportManager.adminAuthorize(), async function (req: express.R
 		const offset = validationUtils.toNumber(req.query['offset'] || 0);
 		const limit = validationUtils.toNumber(req.query['limit'] || 50);
 		const count = await User.count();
-		const users = await User.findAll({ offset: offset, limit: limit });
+		const users = await User.scope('withPrivate').findAll({ offset: offset, limit: limit });
 		res.json({
 			users: users,
 			count: count,
@@ -86,7 +120,7 @@ router.get('/', passportManager.adminAuthorize(), async function (req: express.R
  *       200:
  *         description: 取得成功
  *         schema:
- *           $ref: '#/definitions/User'
+ *           $ref: '#/definitions/UserOnlyPublic'
  *       401:
  *         $ref: '#/responses/Unauthorized'
  */
@@ -113,10 +147,10 @@ router.get('/me', passportManager.userAuthorize(), async function (req: express.
  *       200:
  *         description: 取得成功
  *         schema:
- *           $ref: '#/definitions/User'
+ *           $ref: '#/definitions/UserWithPrivate'
  */
 router.get('/:id', passportManager.adminAuthorize(), function (req: express.Request, res: express.Response, next: express.NextFunction) {
-	User.findById(validationUtils.toNumber(req.params['id']))
+	User.scope('withPrivate').findById(validationUtils.toNumber(req.params['id']))
 		.then(validationUtils.notFound)
 		.then(res.json.bind(res))
 		.catch(next);
@@ -148,7 +182,7 @@ router.get('/:id', passportManager.adminAuthorize(), function (req: express.Requ
  *       200:
  *         description: 更新成功
  *         schema:
- *           $ref: '#/definitions/User'
+ *           $ref: '#/definitions/UserWithPrivate'
  *       400:
  *         $ref: '#/responses/BadRequest'
  *       401:
@@ -156,7 +190,7 @@ router.get('/:id', passportManager.adminAuthorize(), function (req: express.Requ
  */
 router.put('/:id', passportManager.adminAuthorize(), async function (req: express.Request, res: express.Response, next: express.NextFunction) {
 	try {
-		let user = await User.findById(validationUtils.toNumber(req.params['id']));
+		let user = await User.scope('withPrivate').findById(validationUtils.toNumber(req.params['id']));
 		validationUtils.notFound(user);
 		objectUtils.copy(user, req.body, ['note']);
 		user = await user.save();
@@ -182,7 +216,7 @@ router.put('/:id', passportManager.adminAuthorize(), async function (req: expres
  *       200:
  *         description: 削除成功
  *         schema:
- *           $ref: '#/definitions/User'
+ *           $ref: '#/definitions/UserWithPrivate'
  *       400:
  *         $ref: '#/responses/BadRequest'
  *       401:
@@ -192,7 +226,7 @@ router.put('/:id', passportManager.adminAuthorize(), async function (req: expres
  */
 router.delete('/:id', passportManager.adminAuthorize(), async function (req: express.Request, res: express.Response, next: express.NextFunction) {
 	try {
-		const user = await User.findById(validationUtils.toNumber(req.params['id']));
+		const user = await User.scope('withPrivate').findById(validationUtils.toNumber(req.params['id']));
 		validationUtils.notFound(user);
 		await user.destroy();
 		res.json(user);
@@ -294,7 +328,7 @@ router.post('/logout', passportManager.userAuthorize(), function (req: express.R
  *       200:
  *         description: 認証OK
  *         schema:
- *           $ref: '#/definitions/User'
+ *           $ref: '#/definitions/UserOnlyPublic'
  *       403:
  *         $ref: '#/responses/Forbidden'
  */

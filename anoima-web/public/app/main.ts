@@ -1,6 +1,7 @@
 /**
  * @file あの人は今？ブートローダー。
  */
+import "rxjs/Rx";
 import { enableProdMode } from '@angular/core';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { AppModule } from './app.module';

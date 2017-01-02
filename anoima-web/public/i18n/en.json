@@ -1,0 +1,32 @@
+{
+	"COPYRIGHT": "Copyright (C) 2016 anoima project All Rights Reserved.",
+	"FOR_DEVELOPMENT": "For development",
+	"AUTH": {
+		"LOGIN_BY_FACEBOOK": "Login by Facebook",
+		"LOGIN_BY_DUMMY": "Login by dummy authorization",
+		"LOGIN_FORM_DUMMY_ID": "Dummy ID",
+		"LOGIN_FORM_DUMMY_ID_REQUIRED": "Please input a dummy ID.",
+		"LOGOUT": "Logout"
+	},
+	"TOP": {
+		"TITLE": "{{ appName }} Version {{ version }}",
+		"DESCRIPTION": "TODO:翻訳 「あの人は今？」は「あの人は今どうしてるの？」という話題をテーマに、友達や同級生、有名人なんかの近況や噂話を書きこんで、友達同士で共有するサイトです。あなたも知人の近況をシェアしましょう！",
+		"KEY_FORM_TITLE": "TODO:翻訳 キーで表示",
+		"KEY_FORM_KEY_REQUIRED": "Please input the person key! The key can be get by SNS or friends.",
+		"KEY_FORM_SUBMIT": "View",
+		"RANDOM_PEOPLE_TITLE": "TODO: 翻訳 あなたの知っている人は居ますか？情報を投稿しましょう！",
+		"REGISTER_PERSON_BUTTON": "Register new person!"
+	},
+	"ERROR": {
+		"BAD_REQUEST": "Bad request.",
+		"UNAUTHORIZED": "You are not login or session expired. Please login.",
+		"FORBIDDEN": "Forbidden.",
+		"NOT_FOUND": "Sorry. The resource is not found.",
+		"FATAL": "Fatal Error. Please refresh the page and retry."
+	},
+	"Not Found": "Sorry. The resource is not found.",
+	"Internal Server Error": "Sorry. Internal Server Error.",
+	"unique key must be unique": "Unique key must be unique.",
+	"PRIMARY must be unique": "Primary key must be unique.",
+	"input is invalid": "Input is invalid."
+}

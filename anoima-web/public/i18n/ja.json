@@ -1,5 +1,40 @@
 {
-	"APP_NAME": "あの人は今？",
-	"VERSION": "0.0.2",
 	"COPYRIGHT": "Copyright (C) 2016 anoima project All Rights Reserved.",
+	"FOR_DEVELOPMENT": "開発用機能",
+	"AUTH": {
+		"LOGIN_BY_FACEBOOK": "Facebookアカウントでログイン",
+		"LOGIN_BY_DUMMY": "開発用ダミーアカウントでログイン",
+		"LOGIN_FORM_DUMMY_ID": "ダミーID",
+		"LOGIN_FORM_DUMMY_ID_REQUIRED": "ダミーIDを入力してください。",
+		"LOGOUT": "ログアウト"
+	},
+	"TOP": {
+		"TITLE": "{{ appName }} Version {{ version }}",
+		"DESCRIPTION": "「あの人は今？」は「あの人は今どうしてるの？」という話題をテーマに、友達や同級生、有名人なんかの近況や噂話を書きこんで、友達同士で共有するサイトです。あなたも知人の近況をシェアしましょう！",
+		"KEY_FORM_TITLE": "キーで表示",
+		"KEY_FORM_KEY_REQUIRED": "「あの人」のキーを入力してください。キーはSNSなどで共有されています。",
+		"KEY_FORM_SUBMIT": "表示",
+		"RANDOM_PEOPLE_TITLE": "あなたの知っている人は居ますか？情報を投稿しましょう！",
+		"REGISTER_PERSON_BUTTON": "「あの人」ページを作成する。"
+	},
+	"PERSON": {
+		"TITLE": "{{name}} さんのページ"
+	},
+	"ADMIN": {
+		"ADMIN_TITLE": "管理者用ページ",
+		"ID": "ID",
+		"PASSWORD": "パスワード"
+	},
+	"ERROR": {
+		"BAD_REQUEST": "指定されたパラメータは無効です。",
+		"UNAUTHORIZED": "ログインしていないかセッションが切れました。もう一度ログインしてください。",
+		"FORBIDDEN": "指定された操作は許可されていません。",
+		"NOT_FOUND": "指定されたページの読込に失敗しました。ブラウザを再読み込みしてください。",
+		"FATAL": "エラーが発生しました。ブラウザを再読み込みして再度実行してください。"
+	},
+	"Not Found": "データが存在しません。",
+	"Internal Server Error": "サーバーエラーが発生しました。お手数ですがもう一度最初から実行してください。",
+	"unique key must be unique": "送信済みです。ページを再読み込みしてください。",
+	"PRIMARY must be unique": "送信済みです。ページを再読み込みしてください。",
+	"input is invalid": "入力されたデータは使用できません。"
 }

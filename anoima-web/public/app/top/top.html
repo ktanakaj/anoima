@@ -1,0 +1,31 @@
+<div class="panel panel-default">
+    <div class="panel-heading">{{ "TOP.TITLE" | translate:appInfo }}</div>
+    <div class="panel-body">{{ "TOP.DESCRIPTION" | translate }}</div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">{{ "TOP.KEY_FORM_TITLE" | translate }}</div>
+    <div class="panel-body">
+        <form #f="ngForm" (ngSubmit)="findByKey()" novalidate>
+            <fieldset class="form-group">
+                <input type="text" name="key" [(ngModel)]="form.key" #key="ngModel" required />
+                <div class="warning" *ngIf="key.errors">
+                    <div [hidden]="!key.errors.required">{{ "TOP.KEY_FORM_KEY_REQUIRED" | translate }}</div>
+                </div>
+            </fieldset>
+            <button type="submit" class="btn btn-primary btn-sm" [disabled]="!f.form.valid">{{ "TOP.KEY_FORM_SUBMIT" | translate }}</button>
+        </form>
+    </div>
+</div>
+<div class="panel panel-default">
+    <div class="panel-heading">{{ "TOP.RANDOM_PEOPLE_TITLE" | translate }}</div>
+    <table class="table">
+        <tbody>
+            <tr *ngFor="let person of people">
+                <td><a routerLink="/persons/{{ person.map.key }}" routerLinkActive="active">{{ person.name }}</a></td>
+                <td>{{ person.text }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<a routerLink="/persons/new" class="btn btn-primary btn-sm">{{ "TOP.REGISTER_PERSON_BUTTON" | translate }}</a>

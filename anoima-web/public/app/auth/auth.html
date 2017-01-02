@@ -1,0 +1,22 @@
+<div *ngIf="!me">
+    <a href="/auth/facebook" class="btn btn-primary btn-sm">{{ "AUTH.LOGIN_BY_FACEBOOK" | translate }}</a>
+
+    <div class="panel panel-default" *ngIf="environment === 'development'">
+        <div class="panel-heading">{{ "FOR_DEVELOPMENT" | translate }}</div>
+        <div class="panel-body">
+            <form #f="ngForm" (ngSubmit)="loginByDummy()" novalidate>
+                <fieldset class="form-group">
+                    <label for="dummyLoginForm.dummyId">{{ "AUTH.LOGIN_FORM_DUMMY_ID" | translate }}</label>
+                    <input type="text" id="dummyLoginForm.dummyId" name="dummyId" [(ngModel)]="form.dummyId" #dummyId="ngModel" required />
+                    <div class="warning" *ngIf="dummyId.errors">
+                        <div [hidden]="!dummyId.errors.required">{{ "AUTH.LOGIN_FORM_DUMMY_ID_REQUIRED" | translate }}</div>
+                    </div>
+                </fieldset>
+                <button type="submit" class="btn btn-primary btn-sm" [disabled]="!f.form.valid">{{ "AUTH.LOGIN_BY_DUMMY" | translate }}</button>
+            </form>
+        </div>
+    </div>
+</div>
+<div *ngIf="me">
+    <button type="button" class="btn btn-secondary btn-sm" (click)="logout()">{{ "AUTH.LOGOUT" | translate }}</button>
+</div>

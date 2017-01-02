@@ -1,5 +1,5 @@
 /**
- * DBモデルの型定義のNode.jsモジュール。
+ * DBモデルの型定義ファイル。
  * @module ./models/types
  */
 // ※ 個別ソースに書きたいが、sequelize.importで呼び出す都合上他のファイルから参照できないので、ここに集約
@@ -21,6 +21,8 @@ export interface PersonMapAttributes {
  * あの人ID-キーマッピングインスタンス。
  */
 export interface PersonMapInstance extends Sequelize.Instance<PersonMapAttributes>, PersonMapAttributes {
+	person?: PersonInstance;
+
 	/**
 	 * あの人情報を取得する。
 	 * @returns あの人インスタンス。

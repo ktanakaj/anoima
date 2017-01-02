@@ -68,7 +68,7 @@ function copy(target: Object, source: Object, includes?: Array<string>): void {
  * @returns マージ結果。
  */
 function mergeArray(objs1: Array<Object>, objs2: Array<Object>, idKey1: string, idKey2: string, objKey: string, valueKey?: string): Array<Object> {
-	// 結合用にハッシュマップ作成
+	// 結合用にマップ作成
 	const map = {};
 	for (let obj1 of objs1) {
 		map[obj1[idKey1]] = obj1;
@@ -94,7 +94,7 @@ function mergeArray(objs1: Array<Object>, objs2: Array<Object>, idKey1: string, 
  * @returns マージ結果。
  */
 function mergePushArray(objs1: Array<Object>, objs2: Array<Object>, idKey1: string, idKey2: string, arrayKey: string, valueKey?: string): Array<Object> {
-	// 結合用にハッシュマップ作成
+	// 結合用にマップ作成
 	const map = {};
 	for (let obj1 of objs1) {
 		map[obj1[idKey1]] = obj1;

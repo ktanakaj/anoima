@@ -36,6 +36,14 @@
  *       role:
  *         type: string
  *         description: 権限
+ *       createdAt:
+ *         type: string
+ *         format: date-time
+ *         description: 登録日時
+ *       updatedAt:
+ *         type: string
+ *         format: date-time
+ *         description: 更新日時
  */
 import * as express from 'express';
 import * as passport from 'passport';

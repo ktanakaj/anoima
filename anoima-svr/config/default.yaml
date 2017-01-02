@@ -202,27 +202,6 @@
           - properties:
               map:
                 $ref: '#/definitions/PersonMap'
-      User:
-        type: object
-        description: ユーザー情報
-        required:
-          - id
-        properties:
-          id:
-            type: integer
-            format: int32
-            description: ユーザーID
-          note:
-            type: string
-            description: ノート
-          createdAt:
-            type: string
-            format: date-time
-            description: 登録日時
-          updatedAt:
-            type: string
-            format: date-time
-            description: 更新日時
       Bookmark:
         type: object
         description: ブックマーク
