@@ -64,8 +64,8 @@
 ※ 他は未確認
 
 ### 開発環境
-* Vagrant 1.8.4 - 仮想環境管理
-    * VirtualBox 5.0.24 - 仮想環境
+* Vagrant 1.8.x - 仮想環境管理
+    * VirtualBox 5.0.x - 仮想環境
     * vagrant-vbguest - Vagrantプラグイン
 * Visual Studio Code - アプリ開発用エディター
 * MySQL Workbench 6.x - DB管理・EL図作成用ツール
@@ -82,7 +82,6 @@
 1. Vagrantをインストールした後、ファイル一式をVMのフォルダとする場所に展開。
 * `vagrant up` でVM環境を構築（DB構築やアプリの初回ビルド等も自動実行）。
 
-※ VMとのフォルダ共有のために `vagrant-vbguest` プラグインのインストールが必要？  
 ※ `npm install` でエラーになる場合は `vagrant provision` でもう一度実行してみてください。  
 ※ Facebook認証を使用するためには、Facebookにアカウント登録を行い、`local.yaml` でその情報を設定する必要があります。
 
