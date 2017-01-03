@@ -4,8 +4,8 @@
  */
 import { Component, OnInit } from '@angular/core';
 import browserHelper from '../core/browser-helper';
-import { UserService } from '../shared/user.service';
 import { EnvService } from '../shared/env.service';
+import { UserService } from '../shared/user.service';
 import { User } from '../shared/user';
 
 /**
@@ -14,7 +14,6 @@ import { User } from '../shared/user';
 @Component({
 	selector: 'auth',
 	templateUrl: 'app/auth/auth.html',
-	providers: [UserService, EnvService],
 })
 export class AuthComponent implements OnInit {
 	/** ユーザー情報 */

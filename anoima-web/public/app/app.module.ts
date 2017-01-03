@@ -8,8 +8,11 @@ import { HttpModule } from '@angular/http';
 import { RouterModule, Routes } from '@angular/router';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule, TranslateService } from 'ng2-translate';
-import { AppComponent } from './app.component';
 import browserHelper from './core/browser-helper';
+import { EnvService } from './shared/env.service';
+import { UserService } from './shared/user.service';
+import { PersonService } from './shared/person.service';
+import { AppComponent } from './app.component';
 import { AuthComponent } from './auth/auth.component';
 import { TopComponent } from './top/top.component';
 import { PersonNewComponent } from './persons/person-new.component';
@@ -90,6 +93,9 @@ class DefaultErrorHandler implements ErrorHandler {
 	providers: [
 		{ provide: LOCALE_ID, useValue: browserHelper.getLocale() },
 		{ provide: ErrorHandler, useClass: DefaultErrorHandler },
+		EnvService,
+		UserService,
+		PersonService,
 	],
 	bootstrap: [AppComponent]
 })

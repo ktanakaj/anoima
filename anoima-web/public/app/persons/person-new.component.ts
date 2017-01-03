@@ -13,7 +13,6 @@ import { Person } from '../shared/person';
  */
 @Component({
 	templateUrl: 'app/persons/person-new.html',
-	providers: [PersonService],
 })
 export class PersonNewComponent {
 	/** フォーム入力値 */

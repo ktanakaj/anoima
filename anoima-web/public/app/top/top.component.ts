@@ -15,7 +15,6 @@ import { Person } from '../shared/person';
  */
 @Component({
 	templateUrl: 'app/top/top.html',
-	providers: [UserService, PersonService],
 })
 export class TopComponent implements OnInit {
 	/** アプリ情報 */

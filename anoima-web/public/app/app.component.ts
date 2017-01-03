@@ -12,7 +12,6 @@ import { EnvService } from './shared/env.service';
 @Component({
 	selector: 'app-root',
 	templateUrl: 'app/app.html',
-	providers: [EnvService],
 })
 export class AppComponent {
 	/** 環境情報 */

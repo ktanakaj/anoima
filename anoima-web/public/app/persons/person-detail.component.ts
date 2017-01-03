@@ -6,16 +6,15 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from 'ng2-translate';
 import { UserService } from '../shared/user.service';
+import { PersonService } from '../shared/person.service';
 import { Person } from '../shared/person';
 import { User } from '../shared/user';
-import { PersonService } from '../shared/person.service';
 
 /**
  * あの人詳細ページコンポーネントクラス。
  */
 @Component({
 	templateUrl: 'app/persons/person-detail.html',
-	providers: [UserService, PersonService],
 })
 export class PersonDetailComponent implements OnInit {
 	/** ユーザー情報 */
