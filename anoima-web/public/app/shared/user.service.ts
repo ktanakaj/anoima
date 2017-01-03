@@ -4,8 +4,8 @@
  */
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
-import { ResponseError } from './response-error';
-import { Cache } from './cache';
+import { ResponseError } from '../core/response-error';
+import { Cache } from '../core/cache';
 import { User } from './user';
 
 /**

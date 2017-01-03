@@ -4,7 +4,7 @@
  */
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
-import { ResponseError } from '../../shared/response-error';
+import { ResponseError } from '../../core/response-error';
 import { Administrator } from './administrator';
 
 /**

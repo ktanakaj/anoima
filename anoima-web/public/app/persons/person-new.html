@@ -1,0 +1,36 @@
+<!-- TODO: テンプレート構成は仮。要検討 -->
+<div class="panel panel-default">
+    <div class="panel-heading">{{ "PERSON_NEW.TITLE" | translate }}</div>
+    <div class="panel-body">{{ "PERSON_NEW.DESCRIPTION" | translate }}</div>
+    <div class="panel-body">
+        <form #f="ngForm" (ngSubmit)="onSubmit()" novalidate>
+            <fieldset class="form-group">
+                <label for="personNewForm.name">{{ "PERSON.NAME" | translate }}</label>
+                <input type="text" id="personNewForm.name" name="name" [(ngModel)]="form.name" #name="ngModel" placeholder="" required maxlength="255" />
+                <div><small>{{ "PERSON_NEW.FORM_NAME_NOTE" | translate }}</small></div>
+                <div class="warning" *ngIf="name.errors">
+                    <div [hidden]="!name.errors.required">{{ "PERSON_NEW.FORM_NAME_REQUIRED" | translate }}</div>
+                    <div [hidden]="!name.errors.maxlength">{{ "PERSON_NEW.FORM_NAME_MAX_LENGTH" | translate }}</div>
+                </div>
+            </fieldset>
+            <fieldset class="form-group">
+                <label>{{ "PERSON.PRIVACY" | translate }}</label>
+                <label>
+                    <input type="radio" name="privacy" [(ngModel)]="form.privacy" #privacy="ngModel" [value]="'public'">
+                    {{ "PERSON.PRIVACY_PUBLIC" | translate }}
+                </label>
+                <label>
+                    <input type="radio" name="privacy" [(ngModel)]="form.privacy" #privacy="ngModel" [value]="'private'">
+                    {{ "PERSON.PRIVACY_PRIVATE" | translate }}
+                </label>
+            </fieldset>
+            <fieldset class="form-group">
+                <label for="personNewForm.text">{{ "PERSON.TEXT" | translate }}</label>
+                <textarea id="personNewForm.text" name="text" [(ngModel)]="form.text" #text="ngModel" placeholder=""></textarea>
+            </fieldset>
+            <button type="submit" class="btn btn-primary btn-sm" [disabled]="!f.form.valid">{{ "SUBMIT" | translate }}</button>
+            <div class="error">{{ error | translate }}</div>
+        </form>
+    </div>
+</div>
+<a routerLink="/" class="btn btn-info btn-sm">{{ "TO_TOP" | translate }}</a>

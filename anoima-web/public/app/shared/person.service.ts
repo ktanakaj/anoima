@@ -4,7 +4,7 @@
  */
 import { Injectable } from '@angular/core';
 import { Http, URLSearchParams } from '@angular/http';
-import { ResponseError } from './response-error';
+import { ResponseError } from '../core/response-error';
 import { Person } from './person';
 
 /** 通信失敗時のリトライ回数。 */
@@ -47,6 +47,19 @@ export class PersonService {
 	random(limit: number): Promise<Person[]> {
 		return this.http.get('/api/persons/random')
 			.retry(MAX_RETRY)
+			.toPromise()
+			.then((res) => res.json())
+			.catch(ResponseError.throwError);
+	}
+
+	/**
+	 * あの人を登録する。
+	 * @param person あの人情報。
+	 * @returns あの人。
+	 * @throws HTTPエラーの場合。
+	 */
+	create(person: Person): Promise<Person> {
+		return this.http.post('/api/persons/', person)
 			.toPromise()
 			.then((res) => res.json())
 			.catch(ResponseError.throwError);

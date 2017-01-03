@@ -3,6 +3,7 @@
  * @module ./app/auth/auth.component
  */
 import { Component, OnInit } from '@angular/core';
+import browserHelper from '../core/browser-helper';
 import { UserService } from '../shared/user.service';
 import { EnvService } from '../shared/env.service';
 import { User } from '../shared/user';
@@ -48,14 +49,18 @@ export class AuthComponent implements OnInit {
 	 * 開発環境用ダミー認証でログイン。
 	 */
 	async loginByDummy(): Promise<void> {
+		// ※ 認証情報を反映するために画面を再読み込み
 		this.me = await this.userService.loginByDummy(this.form.dummyId);
+		browserHelper.reload();
 	}
 
 	/**
 	 * ログアウト。
 	 */
 	async logout(): Promise<void> {
+		// ※ 要認証ページを開いている可能性があるのでトップに飛ばす
 		await this.userService.logout();
 		this.me = null;
+		browserHelper.redirect('/');
 	}
 }

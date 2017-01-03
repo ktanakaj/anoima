@@ -6,7 +6,7 @@
     "build": "npm run clean-app && webpack --optimize-minimize",
     "watch": "npm run clean-app && webpack --watch --devtool source-map",
     "test": "NODE_ENV=test mocha --compilers ts:espower-typescript/guess --recursive ./test",
-    "doc": "npm run clean-doc && typedoc ./public/app --out ./out --mode file",
+    "doc": "npm run clean-doc && typedoc ./public/app --exclude /**/test/**/*.ts --ignoreCompilerErrors --out ./out --mode file",
     "clean": "npm run clean-app & npm run clean-doc",
     "clean-app": "rm -f ./public/bundle.js",
     "clean-doc": "rm -rf ./out",

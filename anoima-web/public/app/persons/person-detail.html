@@ -1,0 +1,30 @@
+<!-- TODO: テンプレート構成は仮。要検討 -->
+<h1>{{ "PERSON_DETAIL.TITLE" | translate:person }}</h1>
+
+<div class="panel panel-default">
+    <div class="panel-heading">{{ "PERSON.TEXT" | translate }}</div>
+    <div class="panel-body">{{ person.text }}</div>
+</div>
+<div class="panel panel-default">
+    <div class="panel-heading">{{ "PERSON.PRIVACY" | translate }}</div>
+    <div class="panel-body">{{ (person.privacy === 'public' ? 'PERSON.PRIVACY_PUBLIC' : 'PERSON.PRIVACY_PRIVATE') | translate }}</div>
+</div>
+<div class="panel panel-default">
+    <div class="panel-heading">{{ "PERSON.CREATED_AT" | translate }}</div>
+    <div class="panel-body">
+        {{ person.createdAt }}
+        <span [hidden]="person.createdAt == person.updatedAt">({{ 'PERSON.UPDATED_AT' | translate }} {{ person.updatedAt }})</span>
+    </div>
+</div>
+<div *ngFor="let info of person.information" class="panel panel-default">
+    <div class="panel-heading">{{ info.text }} by {{ info.releationship }} ({{ info.createdAt }})</div>
+    <div *ngFor="let comment of info.comments" class="panel-body">{{ comment.text }} by {{ comment.releationship }} ({{ comment.createdAt }})</div>
+    <button type="button" class="btn btn-primary btn-sm" (click)="openCommentDialog(info.id)" [disabled]="!me">{{ (me ? "PERSON_DETAIL.COMMENT_TO_INFORMATION" : "PERSON_DETAIL.COMMENT_TO_INFORMATION_DISABLED") | translate }}</button>
+</div>
+<button type="button" class="btn btn-primary btn-sm" (click)="openInfoDialog()" [disabled]="!me">{{ (me ? "PERSON_DETAIL.REGISTER_INFORMATION" : "PERSON_DETAIL.REGISTER_INFORMATION_DISABLED") | translate:person }}</button>
+<div class="panel panel-default">
+    <div class="panel-heading">{{ "PERSON_DETAIL.COMMENTS" | translate }}</div>
+    <div *ngFor="let comment of person.comments" class="panel-body">{{ comment.text }} by {{ comment.releationship }} ({{ comment.createdAt }})</div>
+    <button type="button" class="btn btn-primary btn-sm" (click)="openCommentDialog()" [disabled]="!me">{{ (me ? "PERSON_DETAIL.COMMENT_TO_PERSON" : "PERSON_DETAIL.COMMENT_TO_PERSON_DISABLED") | translate }}</button>
+</div>
+<a routerLink="/" class="btn btn-info btn-sm">{{ "TO_TOP" | translate }}</a>

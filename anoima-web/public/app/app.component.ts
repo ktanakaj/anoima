@@ -3,7 +3,7 @@
  */
 import { Component } from '@angular/core';
 import { TranslateService } from 'ng2-translate';
-import localeHelper from './shared/locale-helper';
+import browserHelper from './core/browser-helper';
 import { EnvService } from './shared/env.service';
 
 /**
@@ -15,6 +15,9 @@ import { EnvService } from './shared/env.service';
 	providers: [EnvService],
 })
 export class AppComponent {
+	/** 環境情報 */
+	environment: string;
+
 	/**
 	 * サービスをDIしてコンポーネントを生成する。
 	 * @param translate 国際化サービス。
@@ -30,10 +33,11 @@ export class AppComponent {
 	async ngOnInit(): Promise<void> {
 		// アプリで使用する言語を設定
 		this.translate.setDefaultLang('en');
-		this.translate.use(localeHelper.getLanguage());
+		this.translate.use(browserHelper.getLanguage());
 
-		// アプリ名とバージョンをサーバーから読み込み、ローカライズ設定に動的にマージする
+		// システム設定を読み込む。アプリ名とバージョン等はローカライズ設定に動的にマージする
 		const env = await this.envService.env();
+		this.environment = env.environment;
 		for (let lang in env.appName) {
 			this.translate.setTranslation(lang, {
 				APP_NAME: env.appName[lang],

@@ -14,4 +14,7 @@
 <div class="container-fluid">
     <auth></auth>
 </div>
+<div class="container-fluid" *ngIf="environment === 'development'">
+    <a href="/swagger/?url=/api-docs.json" class="btn btn-info btn-sm" role="button">{{ "SWAGGER_UI" | translate }}</a>
+</div>
 <footer class="footer">{{ "COPYRIGHT" | translate }}</footer>

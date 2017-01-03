@@ -4,9 +4,9 @@
 	"AUTH": {
 		"LOGIN_BY_FACEBOOK": "Login by Facebook",
 		"LOGIN_BY_DUMMY": "Login by dummy authorization",
-		"LOGIN_FORM_DUMMY_ID": "Dummy ID",
-		"LOGIN_FORM_DUMMY_ID_REQUIRED": "Please input a dummy ID.",
-		"LOGOUT": "Logout"
+		"LOGOUT": "Logout",
+		"FORM_DUMMY_ID": "Dummy ID",
+		"FORM_DUMMY_ID_REQUIRED": "Please input a dummy ID."
 	},
 	"TOP": {
 		"TITLE": "{{ appName }} Version {{ version }}",

@@ -1,12 +1,16 @@
 {
 	"COPYRIGHT": "Copyright (C) 2016 anoima project All Rights Reserved.",
+	"TO_TOP": "TOPへ",
+	"BACK": "戻る",
+	"SUBMIT": "送信",
 	"FOR_DEVELOPMENT": "開発用機能",
+	"SWAGGER_UI": "APIページ (Swagger UI)",
 	"AUTH": {
 		"LOGIN_BY_FACEBOOK": "Facebookアカウントでログイン",
 		"LOGIN_BY_DUMMY": "開発用ダミーアカウントでログイン",
-		"LOGIN_FORM_DUMMY_ID": "ダミーID",
-		"LOGIN_FORM_DUMMY_ID_REQUIRED": "ダミーIDを入力してください。",
-		"LOGOUT": "ログアウト"
+		"LOGOUT": "ログアウト",
+		"FORM_DUMMY_ID": "ダミーID",
+		"FORM_DUMMY_ID_REQUIRED": "ダミーIDを入力してください。"
 	},
 	"TOP": {
 		"TITLE": "{{ appName }} Version {{ version }}",
@@ -15,10 +19,38 @@
 		"KEY_FORM_KEY_REQUIRED": "「あの人」のキーを入力してください。キーはSNSなどで共有されています。",
 		"KEY_FORM_SUBMIT": "表示",
 		"RANDOM_PEOPLE_TITLE": "あなたの知っている人は居ますか？情報を投稿しましょう！",
-		"REGISTER_PERSON_BUTTON": "「あの人」ページを作成する。"
+		"REGISTER_PERSON_BUTTON": "「あの人」ページを作成する",
+		"REGISTER_PERSON_BUTTON_DISABLED": "「あの人」ページを作成する（要ログイン）"
 	},
 	"PERSON": {
-		"TITLE": "{{name}} さんのページ"
+		"NAME": "名前（ニックネーム）",
+		"PRIVACY": "公開範囲",
+		"PRIVACY_PUBLIC": "TOPページに掲載",
+		"PRIVACY_PRIVATE": "URLを知っている人のみ",
+		"TEXT": "「あの人」に関するその他のコメントなど",
+		"CREATED_AT": "登録日時",
+		"UPDATED_AT": "更新日時"
+	},
+	"PERSON_NEW": {
+		"TITLE": "「あの人」の登録",
+		"DESCRIPTION": "「あの人」を登録しましょう！",
+		"FORM_NAME_NOTE": "「あの人」の名前に本名を記載するのはNG。知り合いだけが分かるニックネームやキーワードを指定しましょう。",
+		"FORM_NAME_PLACEHOLDER": "例）たろー, xx校3年B組のY君, xx市の幼馴染Aさん",
+		"FORM_NAME_REQUIRED": "名前を入力してください。",
+		"FORM_NAME_MAX_LENGTH": "名前は255文字までで入力してください。",
+		"FORM_PRIVACY_PUBLIC": "TOPページに掲載",
+		"FORM_PRIVACY_PRIVATE": "URLを知っている人のみ",
+		"FORM_TEXT_PLACEHOLDER": "例）たろーさん最近見てないけどどうしてるの～？, 有名企業に行ったY君のその後は？？？"
+	},
+	"PERSON_DETAIL": {
+		"TITLE": "{{ name }} さんのページ",
+		"COMMENTS": "コメント",
+		"REGISTER_INFORMATION": "{{ name }} さんの情報を投稿する",
+		"REGISTER_INFORMATION_DISABLED": "{{ name }} さんの情報を投稿する（要ログイン）",
+		"COMMENT_TO_INFORMATION": "この情報にコメントする",
+		"COMMENT_TO_INFORMATION_DISABLED": "この情報にコメントする（要ログイン）",
+		"COMMENT_TO_PERSON": "このページにコメントする",
+		"COMMENT_TO_PERSON_DISABLED": "このページにコメントする（要ログイン）"
 	},
 	"ADMIN": {
 		"ADMIN_TITLE": "管理者用ページ",

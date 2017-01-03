@@ -1,6 +1,6 @@
 /**
  * HTTPレスポンスエラー用例外クラス。
- * @module ./app/shared/response-error
+ * @module ./app/core/response-error
  */
 import { Response } from '@angular/http';
 

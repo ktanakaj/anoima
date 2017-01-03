@@ -1,8 +1,8 @@
+<!-- TODO: テンプレート構成は仮。要検討 -->
 <div class="panel panel-default">
     <div class="panel-heading">{{ "TOP.TITLE" | translate:appInfo }}</div>
     <div class="panel-body">{{ "TOP.DESCRIPTION" | translate }}</div>
 </div>
-
 <div class="panel panel-default">
     <div class="panel-heading">{{ "TOP.KEY_FORM_TITLE" | translate }}</div>
     <div class="panel-body">
@@ -28,4 +28,4 @@
         </tbody>
     </table>
 </div>
-<a routerLink="/persons/new" class="btn btn-primary btn-sm">{{ "TOP.REGISTER_PERSON_BUTTON" | translate }}</a>
+<button type="button" routerLink="/persons/new" class="btn btn-primary btn-sm" [disabled]="!me">{{ (me ? "TOP.REGISTER_PERSON_BUTTON" : "TOP.REGISTER_PERSON_BUTTON_DISABLED") | translate }}</button>

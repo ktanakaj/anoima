@@ -1,6 +1,6 @@
 /**
  * 簡易キャッシュモジュール。
- * @module ./app/shared/cache
+ * @module ./app/core/cache
  */
 
 /**

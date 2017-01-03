@@ -9,20 +9,18 @@ import { RouterModule, Routes } from '@angular/router';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule, TranslateService } from 'ng2-translate';
 import { AppComponent } from './app.component';
-import localeHelper from './shared/locale-helper';
+import browserHelper from './core/browser-helper';
 import { AuthComponent } from './auth/auth.component';
 import { TopComponent } from './top/top.component';
+import { PersonNewComponent } from './persons/person-new.component';
+import { PersonDetailComponent } from './persons/person-detail.component';
 
 /** ルート定義 */
 const appRoutes: Routes = [
-	{ path: 'top', component: TopComponent },
-	// { path: 'persons/:key', component: PersonComponent },
-	{
-		path: '',
-		redirectTo: '/top',
-		pathMatch: 'full'
-	},
-	{ path: '**', redirectTo: '/top' }
+	{ path: '', pathMatch: 'full', component: TopComponent },
+	{ path: 'persons/new', component: PersonNewComponent },
+	{ path: 'persons/:key', component: PersonDetailComponent },
+	{ path: '**', redirectTo: '/' }
 ];
 
 /**
@@ -86,9 +84,11 @@ class DefaultErrorHandler implements ErrorHandler {
 		AppComponent,
 		AuthComponent,
 		TopComponent,
+		PersonNewComponent,
+		PersonDetailComponent,
 	],
 	providers: [
-		{ provide: LOCALE_ID, useValue: localeHelper.getLocale() },
+		{ provide: LOCALE_ID, useValue: browserHelper.getLocale() },
 		{ provide: ErrorHandler, useClass: DefaultErrorHandler },
 	],
 	bootstrap: [AppComponent]
