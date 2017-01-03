@@ -31,6 +31,9 @@
 		"CREATED_AT": "登録日時",
 		"UPDATED_AT": "更新日時"
 	},
+	"PERSON_MAP": {
+		"KEY": "キー"
+	},
 	"PERSON_NEW": {
 		"TITLE": "「あの人」の登録",
 		"DESCRIPTION": "「あの人」を登録しましょう！",
