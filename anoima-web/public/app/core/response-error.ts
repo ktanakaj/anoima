@@ -44,8 +44,7 @@ export class ResponseError extends Error {
 	 * @param response HTTPレスポンス。
 	 * @throws 生成した例外。
 	 */
-	static throwError(response: Response | any): any {
-		// ※ 戻り値はないけど、anyにしておかないとObservableとかでコンパイルエラー
+	static throwError(response: Response | any): never {
 		throw new ResponseError(response);
 	}
 }
