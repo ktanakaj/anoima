@@ -1,5 +1,5 @@
 /**
- * 関連サービスモジュール。
+ * システム設定関連サービスモジュール。
  * @module ./app/shared/env.service
  */
 import { Injectable } from '@angular/core';

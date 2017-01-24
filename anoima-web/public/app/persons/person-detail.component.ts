@@ -1,6 +1,6 @@
 /**
  * あの人詳細ページコンポーネント。
- * @module ./app/persons/person-new.component
+ * @module ./app/persons/person-detail.component
  */
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
@@ -25,7 +25,8 @@ export class PersonDetailComponent implements OnInit {
 	/**
 	 * サービスをDIしてコンポーネントを生成する。
 	 * @param route ルート情報。
-	 * @param service あの人関連サービス。
+	 * @param userService ユーザー関連サービス。
+	 * @param personService あの人関連サービス。
 	 */
 	constructor(
 		private route: ActivatedRoute,

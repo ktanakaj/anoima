@@ -31,7 +31,7 @@ export class TopComponent implements OnInit {
 	 * @param router ルーター。
 	 * @param translate 国際化サービス。
 	 * @param userService ユーザー関連サービス。
-	 * @param service あの人関連サービス。
+	 * @param personService あの人関連サービス。
 	 */
 	constructor(
 		private router: Router,

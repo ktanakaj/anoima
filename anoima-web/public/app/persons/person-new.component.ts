@@ -23,7 +23,7 @@ export class PersonNewComponent {
 	/**
 	 * サービスをDIしてコンポーネントを生成する。
 	 * @param router ルーター。
-	 * @param service あの人関連サービス。
+	 * @param personService あの人関連サービス。
 	 */
 	constructor(
 		private router: Router,

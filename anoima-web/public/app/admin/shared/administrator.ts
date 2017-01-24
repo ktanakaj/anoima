@@ -1,6 +1,6 @@
 /**
  * 管理者関連オブジェクトの型定義ファイル。
- * @module ./app/shared/administrator
+ * @module ./app/admin/shared/administrator
  */
 
 /**

@@ -47,7 +47,7 @@ class DefaultErrorHandler implements ErrorHandler {
 			error = error.rejection;
 		}
 		// 404等のエラーの場合、専用のエラーメッセージを表示。それ以外は想定外のエラーとして扱う
-		let msgId = 'ERROR.FATAL_ERROR';
+		let msgId = 'ERROR.FATAL';
 		if (error.name === "ResponseError") {
 			switch (error.status) {
 				case 400:
