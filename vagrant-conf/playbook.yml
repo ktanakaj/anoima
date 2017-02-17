@@ -5,8 +5,8 @@
     nodesource: https://rpm.nodesource.com/setup_6.x
     swaggeruisource: https://github.com/swagger-api/swagger-ui/archive/v2.2.3.tar.gz
     swaggeruidest: /var/www/swagger
-    app_nginx_conf_src: "/vagrant/vagrant-conf/nginx-app.conf"
-    app_nginx_conf_dest: /etc/nginx/default.d/anoima.conf
+    app_nginx_conf_src: "/vagrant/vagrant-conf/nginx.conf"
+    app_nginx_conf_dest: /etc/nginx/default.d/vagrant.conf
     app_svr_dir: "/vagrant/anoima-svr"
     app_web_dir: "/vagrant/anoima-web"
     app_log_dir: /var/log/local/anoima
@@ -113,7 +113,7 @@
           changed_when: false
           failed_when: false
         - name: Register "pm2" to service by vagrant user
-          shell: pm2 startup systemd -u vagrant
+          shell: pm2 startup systemd -u vagrant --hp /home/vagrant
           when: pm2_service_loaded.stdout == ""
         - name: Action to enable service pm2
           service: name=pm2 state=started enabled=yes
