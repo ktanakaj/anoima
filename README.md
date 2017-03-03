@@ -46,14 +46,14 @@
 * Node.js v6.9.x
 * MariaDB 5.5.x
 * nginx 1.10.x
-* TypeScript 2.1.x
+* TypeScript 2.x
 * Express 4.x
     * Sequelize 3.x
     * Passport 0.3.x
     * Node-config 1.x
     * Log4js 1.x
 * Angular 2.x
-    * webpack 1.x
+    * webpack 2.x
     * ng2-translate 5.x
 * Mocha 3.x
     * Power-assert 1.x
@@ -90,7 +90,8 @@ WebアプリはVM起動時に自動的に立ち上がります。
 
 デフォルトのVMでは http://172.16.10.14/ または http://localhost/ でアクセス可能です。
 
-※ Microsoft EdgeだとプライベートIP（前者）はアクセスできない場合あり。
+※ Microsoft EdgeだとプライベートIP（前者）はアクセスできない場合あり。  
+※ 自動的に立ち上がらない場合は、後述のサーバーコマンドで起動してください。
 
 ### サーバーコマンド
 Webアプリの操作用に、以下のようなサーバーコマンドを用意しています。

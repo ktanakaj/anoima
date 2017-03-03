@@ -3,7 +3,7 @@
   vars:
     timezone: "Asia/Tokyo"
     nodesource: https://rpm.nodesource.com/setup_6.x
-    swaggeruisource: https://github.com/swagger-api/swagger-ui/archive/v2.2.3.tar.gz
+    swaggeruisource: https://github.com/swagger-api/swagger-ui/archive/v2.2.8.tar.gz
     swaggeruidest: /var/www/swagger
     app_nginx_conf_src: "/vagrant/vagrant-conf/nginx.conf"
     app_nginx_conf_dest: /etc/nginx/default.d/vagrant.conf
@@ -116,7 +116,7 @@
           shell: pm2 startup systemd -u vagrant --hp /home/vagrant
           when: pm2_service_loaded.stdout == ""
         - name: Action to enable service pm2
-          service: name=pm2 state=started enabled=yes
+          service: name=pm2-vagrant state=started enabled=yes
       - block:
         - name: Create Swagger-UI directory
           file: path={{ swaggeruidest }} state=directory owner=root group=root mode=0755
