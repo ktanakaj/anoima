@@ -6,11 +6,11 @@
  */
 /**
  * @swagger
- * tag:
+ * tags:
  *   name: administrators
  *   description: 管理者関連API
  *
- * parameter:
+ * parameters:
  *   administratorIdPathParam:
  *     in: path
  *     name: id
@@ -19,7 +19,7 @@
  *     type: integer
  *     format: int32
  *
- * definition:
+ * definitions:
  *   Administrator:
  *     type: object
  *     required:

@@ -47,6 +47,7 @@ m.Administrator.count()
 		if (count === 0) {
 			m.Administrator.create(config['superAccount']);
 		}
-	});
+	})
+	.catch((err) => logger.error(err));
 
 export default m;

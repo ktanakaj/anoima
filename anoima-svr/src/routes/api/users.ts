@@ -6,11 +6,11 @@
  */
 /**
  * @swagger
- * tag:
+ * tags:
  *   name: users
  *   description: ユーザー関連API
  *
- * parameter:
+ * parameters:
  *   userIdPathParam:
  *     in: path
  *     name: id
@@ -19,7 +19,7 @@
  *     type: integer
  *     format: int32
  *
- * definition:
+ * definitions:
  *   UserOnlyPublic:
  *     type: object
  *     required:

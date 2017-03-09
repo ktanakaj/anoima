@@ -6,7 +6,7 @@
  */
 /**
  * @swagger
- * tag:
+ * tags:
  *   name: env
  *   description: システム設定API
  */

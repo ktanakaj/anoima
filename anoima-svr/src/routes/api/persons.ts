@@ -6,11 +6,11 @@
  */
 /**
  * @swagger
- * tag:
+ * tags:
  *   name: persons
  *   description: あの人関連API
  *
- * parameter:
+ * parameters:
  *   informationIdPathParam:
  *     in: path
  *     name: informationId
@@ -26,7 +26,7 @@
  *     type: integer
  *     format: int64
  *
- * definition:
+ * definitions:
  *   Information:
  *     type: object
  *     required:
