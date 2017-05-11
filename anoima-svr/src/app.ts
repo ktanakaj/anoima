@@ -8,21 +8,23 @@ import * as log4js from 'log4js';
 import * as cookieParser from 'cookie-parser';
 import * as bodyParser from 'body-parser';
 import * as session from 'express-session';
+import * as connectRedis from 'connect-redis';
 import 'source-map-support/register';
 import fileUtils from './libs/file-utils';
 
 const app = express();
+const RedisStore = connectRedis(session);
 
 // 各種ライブラリ登録
 log4js.configure(config['log4js']);
 app.use(log4js.connectLogger(log4js.getLogger('access'), {
-	level: log4js.levels.INFO,
+	level: 'auto',
 	nolog: config['noaccesslog'],
 }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(session(config['session']));
+app.use(session(Object.assign({ store: new RedisStore(config['redis']) }, config['session'])));
 app.set('views', __dirname + '/../views');
 app.set('view engine', 'ejs');
 

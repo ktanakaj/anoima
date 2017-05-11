@@ -9,6 +9,9 @@
     resave: false
     saveUninitialized: false
     cookie:
+  redis:
+    host: "127.0.0.1"
+    port: 6379
   sequelize:
     global:
       database: "database"

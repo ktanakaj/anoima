@@ -3,7 +3,7 @@
   vars:
     timezone: "Asia/Tokyo"
     nodesource: https://rpm.nodesource.com/setup_6.x
-    swaggeruisource: https://github.com/swagger-api/swagger-ui/archive/v2.2.8.tar.gz
+    swaggeruisource: https://github.com/swagger-api/swagger-ui/archive/v3.0.9.tar.gz
     swaggeruidest: /var/www/swagger
     app_nginx_conf_src: "/vagrant/vagrant-conf/nginx.conf"
     app_nginx_conf_dest: /etc/nginx/default.d/vagrant.conf
@@ -59,6 +59,8 @@
           yum: name=nginx state=latest
         - name: Install the latest version of Git
           yum: name=git state=latest
+        - name: Install the latest version of Redis
+          yum: name=redis state=latest
       - block:
         - name: Install "mocha" node.js package globally
           npm: name=mocha global=yes
@@ -77,6 +79,8 @@
       - block:
         - name: Action to enable service mariadb
           service: name=mariadb state=started enabled=yes
+        - name: Action to enable service Redis
+          service: name=redis state=started enabled=yes
         - name: Copy the web app configuration to nginx
           copy: src={{ app_nginx_conf_src }} dest={{ app_nginx_conf_dest }} force=no
         - name: Action to enable service nginx
@@ -107,7 +111,7 @@
             - "{{ app_db_users }}"
       - block:
         - name: Check "pm2" service registration
-          shell: systemctl status pm2.service | grep -e "enabled"
+          shell: systemctl status pm2-vagrant.service | grep -e "enabled"
           register: pm2_service_loaded
           check_mode: no
           changed_when: false
@@ -138,3 +142,5 @@
           shell: npm run {{ build_target }} chdir={{ app_web_dir }}
         - name: Register the web application to pm2
           shell: npm start chdir={{ app_svr_dir }}
+        - name: Save pm2 current processes
+          shell: pm2 save

@@ -45,7 +45,7 @@ sequelize.sync();
 m.Administrator.count()
 	.then((count) => {
 		if (count === 0) {
-			m.Administrator.create(config['superAccount']);
+			return m.Administrator.create(config['superAccount']);
 		}
 	})
 	.catch((err) => logger.error(err));
