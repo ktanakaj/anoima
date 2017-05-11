@@ -43,7 +43,7 @@
 
 ## 環境
 * CentOS 7
-* Node.js v6.9.x
+* Node.js v6.x
 * MariaDB 5.5.x
 * nginx 1.10.x
 * TypeScript 2.x
@@ -52,9 +52,9 @@
     * Passport 0.3.x
     * Node-config 1.x
     * Log4js 1.x
-* Angular 2.x
+* Angular 4.x
     * webpack 2.x
-    * ng2-translate 5.x
+    * ngx-translate 6.x
 * Mocha 3.x
     * Power-assert 1.x
 

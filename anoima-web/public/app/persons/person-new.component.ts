@@ -4,7 +4,7 @@
  */
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { TranslateService } from 'ng2-translate';
+import { TranslateService } from '@ngx-translate/core';
 import { PersonService } from '../shared/person.service';
 import { Person } from '../shared/person';
 

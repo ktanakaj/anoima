@@ -4,7 +4,7 @@
  */
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { TranslateService } from 'ng2-translate';
+import { TranslateService } from '@ngx-translate/core';
 import { UserService } from '../shared/user.service';
 import { PersonService } from '../shared/person.service';
 import { User } from '../shared/user';

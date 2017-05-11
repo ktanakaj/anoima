@@ -4,10 +4,11 @@
 import { NgModule, ErrorHandler, Injectable, LOCALE_ID } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpModule } from '@angular/http';
+import { HttpModule, Http } from '@angular/http';
 import { RouterModule, Routes } from '@angular/router';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { TranslateModule, TranslateService } from 'ng2-translate';
+import { TranslateLoader, TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { ModalModule, PaginationModule } from 'ngx-bootstrap';
 import browserHelper from './core/browser-helper';
 import { EnvService } from './shared/env.service';
 import { UserService } from './shared/user.service';
@@ -80,8 +81,13 @@ class DefaultErrorHandler implements ErrorHandler {
 		FormsModule,
 		HttpModule,
 		RouterModule.forRoot(appRoutes),
-		NgbModule.forRoot(),
-		TranslateModule.forRoot(),
+		TranslateModule.forRoot({
+			loader: {
+				provide: TranslateLoader,
+				useFactory: (http: Http) => new TranslateHttpLoader(http, './i18n/'),
+				deps: [Http]
+			}
+		}),
 	],
 	declarations: [
 		AppComponent,
