@@ -80,7 +80,7 @@
 
 ## 環境構築手順
 1. Vagrantをインストールした後、ファイル一式をVMのフォルダとする場所に展開。
-* `vagrant up` でVM環境を構築（DB構築やアプリの初回ビルド等も自動実行）。
+2. `vagrant up` でVM環境を構築（DB構築やアプリの初回ビルド等も自動実行）。
 
 ※ `npm install` でエラーになる場合は `vagrant provision` でもう一度実行してみてください。  
 ※ Facebook認証を使用するためには、Facebookにアカウント登録を行い、`local.yaml` でその情報を設定する必要があります。
